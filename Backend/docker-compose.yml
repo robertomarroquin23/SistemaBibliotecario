@@ -12,4 +12,6 @@ services:
     depends_on:
       - mongo
     environment:
-      MONGODB_URI: mongodb://localhost:27017/Proyectofinalmoviles
+      MONGODB_URI: mongodb://mongo:27017/Proyectofinalmoviles
+    volumes:
+      - .:/SistemaBibliotecario
