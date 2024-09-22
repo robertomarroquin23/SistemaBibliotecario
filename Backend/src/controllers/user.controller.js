@@ -10,7 +10,7 @@ export class UserController {
       await newuser.save();
       res.status(200).json(newuser);
     } catch (error) {
-      res.status(500).json("pedillos");
+      res.status(500).json("Error capa8");
     }
   }
 
