@@ -4,10 +4,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';   
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import Login from './src/pages/Login';
-import Principal from './src/pages/Principal';
-import MisLibros from './src/pages/MisLibros';
-import DetallesLibro from './src/pages/DetalleLibro';
+import Login from './src/pages/login';
+import Principal from './src/pages/principal';
+import MisLibros from './src/pages/Mislibros';
+import DetallesLibro from './src/pages/DetalleLibros';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();

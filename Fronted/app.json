@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Front",
-    "slug": "Front",
+    "name": "Fronted",
+    "slug": "Fronted",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
