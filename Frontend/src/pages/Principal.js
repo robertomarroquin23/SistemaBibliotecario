@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Text, Dimensions, ScrollView, TouchableOpacity, TextInput, Image, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';

@@ -11,6 +11,10 @@ const Login = () => {
     navigation.navigate('MainTabs'); 
   };
 
+  const Recuperacion = () => {
+    navigation.navigate('Verificacion');
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.titleb}>¡Bienvenido!</Text>
@@ -32,9 +36,9 @@ const Login = () => {
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 
-      <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
+      <Text style={styles.forgotPassword} onPress={Recuperacion}>¿Olvidaste tu contraseña?</Text>
+      
       <Text style={styles.orText}>O continúa con:</Text>
-
       <View style={styles.socialButtonsContainer}>
         <TouchableOpacity style={styles.socialButton}>
           <MaterialCommunityIcons name="facebook" size={24} color="#4267B2" />
