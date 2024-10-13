@@ -10,7 +10,7 @@ export class UserController {
       await newuser.save();
       res.status(200).json(newuser);
     } catch (error) {
-      res.status(500).json("Server error response: " + error.message);
+      res.status(500).json("Error capa8");
     }
   }
 
@@ -20,7 +20,7 @@ export class UserController {
 
       return res.status(200).json(users);
     } catch (error) {
-      res.status(500).json("Server Error response: " + error.message);
+      res.status(500).json("pedillos 2");
     }
   }
 }
