@@ -1,5 +1,6 @@
 import express from "express";
 import userRoutes from "./src/routes/user.routes.js";
+import librosRoutes from "./src/routes/libros.routes.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
@@ -19,5 +20,6 @@ mongoose
   });
 
 app.use("/biblioteca/", userRoutes);
+app.use("/biblioteca/getlibros", librosRoutes);
 
 app.listen(port, () => console.log(`app listening on port ${port}`));
