@@ -1,5 +1,6 @@
 import express from "express";
 import userRoutes from "./src/routes/user.routes.js";
+import librosRoutes from "./src/routes/libros.routes.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from 'cors';
@@ -27,6 +28,7 @@ mongoose
   });
 
 app.use("/biblioteca/", userRoutes);
+app.use("/biblioteca/getlibros", librosRoutes);
 
 // Ejemplo de ruta
 app.post('/api/login', (req, res) => {
