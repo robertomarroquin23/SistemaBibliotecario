@@ -1,28 +1,46 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        if (email === 'holamundo@gmail.com' && password === '112233') {
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post('http://localhost:3000/api/login', {
+                email: email,
+                password: password,
+            });
+
+            // Guardar el token si el login es exitoso
+            await AsyncStorage.setItem('token', response.data.token);
+
+            // Navegar a la siguiente pantalla si el login es exitoso
             navigation.navigate('Home');
-        } else {
-            alert('Invalid credentials');
+
+        } catch (error) {
+            // Manejar el error si las credenciales son incorrectas
+            if (error.response && error.response.status === 400) {
+                Alert.alert('Error', 'Credenciales incorrectas');
+            } else {
+                Alert.alert('Error', 'Hubo un problema con el servidor');
+            }
         }
     };
-
 
 
     return (
         <View style={styles.container}>
             <View style={styles.form}>
-                <Text style={styles.title}>Login</Text>
+                <Text style={styles.title}>INICIA SESION</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
                     value={email}
+                    keyboardType="email-address"
                     onChangeText={setEmail}
                 />
                 <TextInput

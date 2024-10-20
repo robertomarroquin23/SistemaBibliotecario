@@ -3,8 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Login from './assets/Pages/Login/LoginScreen';
-
+import Login from './src/pages/LoginScreen/Login';
+import Home from './src/pages/HomeScreen/Home';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +16,10 @@ const App = () => {
           name="Login"
           component={Login}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Home}
         />
       </Stack.Navigator>
     </NavigationContainer>
