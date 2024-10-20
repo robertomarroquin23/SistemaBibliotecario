@@ -1,16 +1,36 @@
-
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const DetallesLibro = ({ route }) => {
+const DetallesLibro = ({ route, navigation }) => {
   const { book } = route.params;
 
   const isAvailable = book.disponibilidad === 'Disponible';
 
   return (
     <ScrollView style={styles.container}>
-      <Image source={book.image} style={styles.bookImage} />
+      <Image source={{ uri: book.image }} style={styles.bookImage} />
+
+      {/* Círculo de fondo */}
+      <View style={styles.backgroundCircle} />
+
+      {/* Contenedor de botones */}
+      <View style={styles.topButtonsContainer}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => {
+            console.log("Volver a la pantalla Principal");
+            navigation.navigate("MainTabs", { screen: "Principal" });
+          }}
+        >
+          <Icon name="arrow-back" size={24} color="#000" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.moreOptionsButton}>
+          <Icon name="more-vert" size={24} color="#000" />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.card}>
         <Text style={styles.title}>{book.title}</Text>
         <Text style={styles.author}>By {book.author}</Text>
@@ -30,7 +50,10 @@ const DetallesLibro = ({ route }) => {
           </View>
         </View>
 
-        <Text style={styles.description}>{book.description}</Text>
+        {/* Hacer que el texto sea más transparente */}
+        <Text style={[styles.description, styles.transparentText]}>
+          {book.description}
+        </Text>
 
         <Text style={[styles.disponibilidad, { color: isAvailable ? 'green' : 'red' }]}>
           Disponibilidad: {book.disponibilidad}
@@ -49,6 +72,7 @@ const DetallesLibro = ({ route }) => {
   );
 };
 
+// Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -57,12 +81,38 @@ const styles = StyleSheet.create({
   bookImage: {
     width: '100%',
     height: 500,
-    resizeMode: 'cover', 
+    resizeMode: 'cover',
+  },
+  backgroundCircle: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 1.5)', 
+    borderRadius: 500, 
+    transform: [{ scale: 2 }], 
+    zIndex: -1, 
+  },
+  topButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+    position: 'absolute',
+    top: 40,
+    width: '100%',
+    zIndex: 1,
+  },
+  backButton: {
+    padding: 10,
+  },
+  moreOptionsButton: {
+    padding: 10,
   },
   card: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 1.8)',
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -108,6 +158,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     lineHeight: 22,
+  },
+  transparentText: {
+    opacity: 0.7, // Ajustar el valor para mayor o menor transparencia
   },
   buttonContainer: {
     flexDirection: 'row',
