@@ -5,16 +5,26 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const DetallesLibro = ({ route, navigation }) => {
   const { book } = route.params;
 
-  const isAvailable = book.disponibilidad === 'Disponible';
+  const isAvailable = book.disponibilidad === 'Disponible'; 
+
+  // Mapeo de colores para categorías
+  const categoryColors = {
+    "Fear": "#FF5733", // Ejemplo para "Fear"
+    "Fiction": "#33FF57", // Ejemplo para "Fiction"
+    "Action": "#3357FF", // Ejemplo para "Action"
+    // Agrega más categorías y colores según sea necesario
+  };
+
+  // Guardar el ID y la categoría
+  const bookId = book._id; // Guardamos el ID sin mostrarlo
+  const categoryColor = categoryColors[book.categories] || '#000'; // Color por defecto si no se encuentra
 
   return (
     <ScrollView style={styles.container}>
       <Image source={{ uri: book.image }} style={styles.bookImage} />
 
-      {/* Círculo de fondo */}
       <View style={styles.backgroundCircle} />
 
-      {/* Contenedor de botones */}
       <View style={styles.topButtonsContainer}>
         <TouchableOpacity
           style={styles.backButton}
@@ -35,22 +45,14 @@ const DetallesLibro = ({ route, navigation }) => {
         <Text style={styles.title}>{book.title}</Text>
         <Text style={styles.author}>By {book.author}</Text>
 
-        <View style={styles.detailsRow}>
-          <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Chapter</Text>
-            <Text style={styles.detailValue}>{book.chapters}</Text>
-          </View>
-          <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Pages</Text>
-            <Text style={styles.detailValue}>{book.pages}</Text>
-          </View>
-          <View style={styles.detailItem}>
-            <Text style={styles.detailLabel}>Time</Text>
-            <Text style={styles.detailValue}>{book.time}</Text>
-          </View>
+        {/* Nueva etiqueta para el género */}
+        <View style={styles.genreContainer}>
+          <Text style={styles.genreLabel}>Género:</Text>
+          <Text style={[styles.category, { color: categoryColor }]}>
+            {book.categories}
+          </Text>
         </View>
 
-        {/* Hacer que el texto sea más transparente */}
         <Text style={[styles.description, styles.transparentText]}>
           {book.description}
         </Text>
@@ -136,21 +138,19 @@ const styles = StyleSheet.create({
   author: {
     fontSize: 18,
     color: '#666',
-    marginBottom: 20,
+    marginBottom: 5,
   },
-  detailsRow: {
+  genreContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
   },
-  detailItem: {
-    alignItems: 'center',
+  genreLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 5,
   },
-  detailLabel: {
-    fontSize: 14,
-    color: '#888',
-  },
-  detailValue: {
+  category: {
     fontSize: 16,
     fontWeight: 'bold',
   },
