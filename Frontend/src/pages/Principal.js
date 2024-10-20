@@ -11,10 +11,8 @@ import {
   Animated,
 } from "react-native";
 import axios from "axios";
-
 import { Ionicons } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
-
 const { width } = Dimensions.get("window");
 
 const categories = [
@@ -37,8 +35,8 @@ const colors = [
   "#ff77ff",
 ];
 
-const API_KEY = "AIzaSyAVwyPO_n3ZlZ0AiyTs1hOvjBrtUnkzrvQ";
-const recommendedBooks = [
+const API_URL = "http://192.168.1.58:3000/ObtenerLibros/getlibrosmongo";
+{/*const recommendedBooks = [
   {
     title: "El Arte de Programar",
     author: "Donald Knuth",
@@ -69,12 +67,14 @@ const recommendedBooks = [
     author: "Jane Austen",
     image: "https://via.placeholder.com/60x90",
   },
-];
+];*/}
 
-const Principal = () => {
+const Principal = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [books, setbooks] = useState([]);
   const colorAnimation = useRef(new Animated.Value(0)).current;
+  const [recommendedBooks, setRecommendedBooks] = useState([]);
+
   useEffect(() => {
     const colorCount = colors.length;
     Animated.loop(
@@ -93,7 +93,7 @@ const Principal = () => {
     ).start();
   }, [colorAnimation]);
 
-  useEffect(async () => {
+ {/* useEffect(async () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
@@ -115,9 +115,23 @@ const Principal = () => {
     };
 
     fetchData();
+  }, []);*/}
+  ///funcion para obtener los libros 
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        setbooks(response.data.slice(0, 20)); //20 libros 
+        setRecommendedBooks(response.data.slice(0, 5)); // 5 libros
+      } catch (error) {
+        console.error("sucedio un error :", error);
+      }
+    };
+
+    fetchBooks();
   }, []);
 
-  const Books = [
+ {/* const Books = [
     {
       title: "Libro 1",
       author: "Autor 1",
@@ -168,7 +182,7 @@ const Principal = () => {
       author: "Autor 9",
       image: "https://via.placeholder.com/60x90",
     },
-  ];
+  ];*/}
 
   const backgroundColorInterpolate = colorAnimation.interpolate({
     inputRange: [0, 1],
@@ -261,16 +275,21 @@ const Principal = () => {
 
           <Text style={styles.texta}>Tambien podria Gustarte</Text>
         </View>
-
         <View style={styles.container}>
-          {books.map((book, index) => (
-            <TouchableOpacity key={index} style={styles.card}>
-              <Image source={{ uri: book.image }} style={styles.bookImage} />
-              <Text style={styles.bookTitle}>{book.title}</Text>
-              <Text style={styles.bookAuthor}>{book.author}</Text>
-            </TouchableOpacity>
-          ))}
+            {books.map((book, index) => (
+                <TouchableOpacity 
+                  key={index} 
+                  style={styles.cardItem}
+                  onPress={() => navigation.navigate("DetallesLibro", { book })}
+                  >
+                  <Image source={{ uri: book.image }} style={styles.bookCover} />
+                  <Text style={styles.bookTitleText}>{book.title}</Text> 
+                  <Text style={styles.bookAuthorText}>{book.author}</Text> 
+                </TouchableOpacity>
+
+            ))}
         </View>
+
       </View>
     </ScrollView>
   );
@@ -398,8 +417,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   bookImage: {
-    width: 80,
-    height: 120,
+    width: 100,
+    height: 200,
     borderRadius: 10,
     resizeMode: "cover",
   },
@@ -505,6 +524,37 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 20,
     marginBottom: 20,
+  },
+  cardItem: {
+    width: (width - 50) / 2,
+    height: 280,
+    backgroundColor: "#f5f5f5",
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: "#aaa",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
+    overflow: 'hidden',
+  },
+  bookCover: {
+    width: '95%',
+    height: '80%',
+    position: 'absolute',
+    top: 0,
+  },
+  bookTitleText: {
+    marginTop: 225, 
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#333",
+    paddingHorizontal: 10,
+  },
+  bookAuthorText: {
+    fontSize: 14,
+    color: "#777",
+    paddingHorizontal: 10,
   },
 });
 
