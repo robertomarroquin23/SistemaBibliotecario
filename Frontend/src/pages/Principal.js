@@ -277,18 +277,27 @@ const Principal = ({navigation}) => {
         </View>
         <View style={styles.container}>
             {books.map((book, index) => (
-                <TouchableOpacity 
-                  key={index} 
-                  style={styles.cardItem}
-                  onPress={() => navigation.navigate("DetallesLibro", { book })}
-                  >
-                  <Image source={{ uri: book.image }} style={styles.bookCover} />
-                  <Text style={styles.bookTitleText}>{book.title}</Text> 
-                  <Text style={styles.bookAuthorText}>{book.author}</Text> 
-                </TouchableOpacity>
+                      <TouchableOpacity 
+                        key={index} 
+                        style={styles.cardItem}
+                        onPress={() => {
+                        
+                          navigation.navigate("DetallesLibro", { 
+                            book: {
+                              ...book,
+                              id: book._id, 
+                              categories: book.categories 
+                            } 
+                          }); 
+                        }} 
+                      > 
+                <Image source={{ uri: book.image }} style={styles.bookCover} /> 
+                <Text style={styles.bookTitleText}>{book.title}</Text> 
+                <Text style={styles.bookAuthorText}>{book.author}</Text> 
+              </TouchableOpacity>
+            ))} 
+          </View>
 
-            ))}
-        </View>
 
       </View>
     </ScrollView>
