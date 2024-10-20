@@ -34,14 +34,14 @@ export class LibrosController {
           ? item.volumeInfo.authors[0]
           : "Autor desconocido",
         image: item.volumeInfo.imageLinks
-        ? item.volumeInfo.imageLinks.extraLarge || item.volumeInfo.imageLinks.large
-        : "https://example.com/default.jpg",
+          ? item.volumeInfo.imageLinks.thumbnail
+          : "https://example.com/default.jpg",
         description: item.volumeInfo.description || "Sin descripción",
         isbn: item.volumeInfo.industryIdentifiers
           ? {
-              type: item.volumeInfo.industryIdentifiers[0].type,
-              identifier: item.volumeInfo.industryIdentifiers[0].identifier,
-            }
+            type: item.volumeInfo.industryIdentifiers[0].type,
+            identifier: item.volumeInfo.industryIdentifiers[0].identifier,
+          }
           : { type: "Unknown", identifier: "N/A" },
         categories: item.volumeInfo.categories
           ? item.volumeInfo.categories[0]
@@ -75,7 +75,7 @@ export class LibrosController {
     }
   }
 
-  async editstock(req, res) {}
+  async editstock(req, res) { }
 
   async savebooks(req, res) {
     const newProduct = new Products({
