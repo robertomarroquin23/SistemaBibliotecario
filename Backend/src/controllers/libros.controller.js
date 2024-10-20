@@ -29,29 +29,30 @@ export class LibrosController {
         `https://www.googleapis.com/books/v1/volumes?q=${categoriesQuery}&langRestrict=es&maxResults=${maxResults}&key=${API_KEY}`
       );
       const fetchedbooks = response.data.items.map((item) => ({
-        title: item.volumeInfo.title,
+        title: item.volumeInfo.title || "Sin título",
         author: item.volumeInfo.authors
           ? item.volumeInfo.authors[0]
-          : "Autores desconocido",
+          : "Autor desconocido",
         image: item.volumeInfo.imageLinks
           ? item.volumeInfo.imageLinks.thumbnail
           : "https://example.com/default.jpg",
-        description: item.volumeInfo.description
-          ? item.volumeInfo.description
-          : "Sin descripcion",
-        isbn: item.volumeInfo.industryIdentifiers[0],
+        description: item.volumeInfo.description || "Sin descripción",
+        isbn: item.volumeInfo.industryIdentifiers
+          ? {
+              type: item.volumeInfo.industryIdentifiers[0].type,
+              identifier: item.volumeInfo.industryIdentifiers[0].identifier,
+            }
+          : { type: "Unknown", identifier: "N/A" },
         categories: item.volumeInfo.categories
           ? item.volumeInfo.categories[0]
           : "Sin categoría",
-        maturity: item.volumeInfo.maturityRating,
-        previewlink: item.volumeInfo.previewLink
-          ? item.volumeInfo.previewLink
-          : "no_disponible",
+        maturity: item.volumeInfo.maturityRating || "No disponible",
+        previewlink: item.volumeInfo.previewLink || "no_disponible",
       }));
 
       fetchedbooks.forEach(async (book, index) => {
         let stock = 0;
-        console.log(book.previewlink);
+
         const crearlibro = new Books({
           title: book.title,
           author: book.author,
@@ -70,16 +71,11 @@ export class LibrosController {
 
       res.status(200).json(fetchedbooks);
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json(error, "cagada");
     }
   }
 
-  async editstock(req,res){
-    
-  }
-
-
-
+  async editstock(req, res) {}
 
   async savebooks(req, res) {
     const newProduct = new Products({
