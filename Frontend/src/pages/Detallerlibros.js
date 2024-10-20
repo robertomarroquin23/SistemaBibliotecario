@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   transparentText: {
-    opacity: 0.7, // Ajustar el valor para mayor o menor transparencia
+    opacity: 0.7, 
   },
   buttonContainer: {
     flexDirection: 'row',
