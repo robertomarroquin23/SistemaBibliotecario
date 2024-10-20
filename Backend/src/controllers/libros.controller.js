@@ -34,15 +34,12 @@ export class LibrosController {
           ? item.volumeInfo.authors[0]
           : "Autor desconocido",
         image: item.volumeInfo.imageLinks
-        ? item.volumeInfo.imageLinks.extraLarge || item.volumeInfo.imageLinks.large
-        : "https://example.com/default.jpg",
-        description: item.volumeInfo.description || "Sin descripción",
-        isbn: item.volumeInfo.industryIdentifiers
-          ? {
-              type: item.volumeInfo.industryIdentifiers[0].type,
-              identifier: item.volumeInfo.industryIdentifiers[0].identifier,
-            }
-          : { type: "Unknown", identifier: "N/A" },
+          ? item.volumeInfo.imageLinks.thumbnail
+          : "https://example.com/default.jpg",
+        description: item.volumeInfo.description
+          ? item.volumeInfo.description
+          : "Sin descripcion",
+        isbn: item.volumeInfo.industryIdentifiers[0],
         categories: item.volumeInfo.categories
           ? item.volumeInfo.categories[0]
           : "Sin categoría",
