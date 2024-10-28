@@ -1,192 +1,353 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Modal from 'react-native-modal';
+import axios from 'axios';
+import * as Print from 'expo-print'; 
+import { shareAsync } from 'expo-sharing'; 
 
 const DetallesLibro = ({ route, navigation }) => {
   const { book } = route.params;
+  const isAvailable = book.stock > 0;
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isTicketModalVisible, setTicketModalVisible] = useState(false);
+  const [ticketData, setTicketData] = useState(null);
+  const [showDownloadButton, setShowDownloadButton] = useState(false);
 
-  const isAvailable = book.disponibilidad === 'Disponible'; 
-
-  // Mapeo de colores para categorías
-  const categoryColors = {
-    "Fear": "#FF5733", // Ejemplo para "Fear"
-    "Fiction": "#33FF57", // Ejemplo para "Fiction"
-    "Action": "#3357FF", // Ejemplo para "Action"
-    // Agrega más categorías y colores según sea necesario
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
 
-  // Guardar el ID y la categoría
-  const bookId = book._id; // Guardamos el ID sin mostrarlo
-  const categoryColor = categoryColors[book.categories] || '#000'; // Color por defecto si no se encuentra
+  const API_URL = "http://192.168.1.63:3000/biblioteca/Reservarlibro";
+
+  const handleReserve = async () => {
+    try {
+      const response = await axios.post(API_URL, {
+        bookId: book.id,
+      });
+
+      if (response.status === 200) {
+        setTicketData(response.data);
+        setShowDownloadButton(true);
+      } else {
+        console.log('Error al reservar:', response.data);
+      }
+    } catch (error) {
+      console.error('Error en la petición:', error);
+    } finally {
+      toggleModal(); 
+    }
+    
+  };
+
+  const handleDownloadPDF = async () => {
+    const htmlContent = `
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; 
+      padding: 20px; 
+      background-color: #f7f7f7; 
+    }
+    .ticket {
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .qr-code {
+      text-align: center;
+      margin-top: 20px;
+    }
+    img {
+      width: 150px; 
+      height: 150px; 
+    }
+  </style>
+</head>
+<body>
+  <div class="ticket">
+    <h1>Ticket de Reserva</h1>
+    <table>
+      <tr>
+        <th>Detalle</th>
+        <th>Información</th>
+      </tr>
+      <tr>
+        <td>Libro</td>
+        <td>${ticketData?.libro.title}</td>
+      </tr>
+      <tr>
+        <td>Autor</td>
+        <td>${ticketData?.libro.author}</td>
+      </tr>
+      <tr>
+        <td>Fecha de Reserva</td>
+        <td>${new Date().toLocaleDateString()}</td>
+      </tr>
+      <tr>
+        <td>ID de Reserva</td>
+        <td>${ticketData?._id}</td>
+      </tr>
+      <tr>
+        <td>Código de Préstamo</td>
+        <td>${ticketData?.codigoPrestamo}</td>
+      </tr>
+      <tr>
+        <td>ID de Alumno</td>
+        <td>${ticketData?.registro.idAlumno}</td>
+      </tr>
+      <tr>
+        <td>Usuario</td>
+        <td>Juan Pérez</td>
+      </tr>
+    </table>
+    <div class="footer">
+      <p>ITCA-FEPADE</p>
+      <p>Departamento de La Libertad, Santa Tecla</p>
+    </div>
+    <div class="qr-code">
+      <h2>Escanea el código QR para más información</h2>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://www.itca.edu.sv/&size=150x150" alt="Código QR ITCA">
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    try {
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+      await shareAsync(uri);
+    } catch (error) {
+      console.error('Error al generar el PDF:', error);
+    }
+  };
 
   return (
-    <ScrollView style={styles.container}>
-      <Image source={{ uri: book.image }} style={styles.bookImage} />
-
-      <View style={styles.backgroundCircle} />
-
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.topButtonsContainer}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => {
-            console.log("Volver a la pantalla Principal");
-            navigation.navigate("MainTabs", { screen: "Principal" });
-          }}
-        >
-          <Icon name="arrow-back" size={24} color="#000" />
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Icon name="arrow-back" size={30} color="black" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.moreOptionsButton}>
-          <Icon name="more-vert" size={24} color="#000" />
+        <TouchableOpacity style={styles.heartButton}>
+          <Icon name="favorite-border" size={20} color="#FF0000" />
         </TouchableOpacity>
+
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.title}>{book.title}</Text>
-        <Text style={styles.author}>By {book.author}</Text>
+      <Text style={styles.titulo}>Título de la Pantalla</Text>
 
-        {/* Nueva etiqueta para el género */}
-        <View style={styles.genreContainer}>
-          <Text style={styles.genreLabel}>Género:</Text>
-          <Text style={[styles.category, { color: categoryColor }]}>
-            {book.categories}
+      <Text style={styles.genre}>{book.categories}</Text>
+      <View style={styles.detailsContainer}>
+        <Image source={{ uri: book.image }} style={styles.bookImage} />
+        <View style={styles.infoContainer}>
+          <Text style={styles.title}>{book.title}</Text>
+          <Text style={styles.author}>By {book.author}</Text>
+          <Text style={styles.stockText}>
+            Disponibilidad: {isAvailable ? 'Disponible' : 'No Disponible'} ({book.stock} en stock)
           </Text>
-        </View>
-
-        <Text style={[styles.description, styles.transparentText]}>
-          {book.description}
-        </Text>
-
-        <Text style={[styles.disponibilidad, { color: isAvailable ? 'green' : 'red' }]}>
-          Disponibilidad: {book.disponibilidad}
-        </Text>
-
-        {isAvailable && (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, styles.reserveButton]}>
+          {isAvailable && (
+            <TouchableOpacity style={styles.reserveButton} onPress={toggleModal}>
               <Icon name="event" size={20} color="#fff" />
               <Text style={styles.buttonText}>Reservar</Text>
             </TouchableOpacity>
-          </View>
-        )}
+          )}
+        </View>
       </View>
+
+      <Text style={styles.descriptionTitle}>Descripción</Text>
+      <Text style={styles.description}>{book.description}</Text>
+
+      {showDownloadButton && (
+        <TouchableOpacity style={styles.downloadButton} onPress={() => setTicketModalVisible(true)}>
+          <Text style={styles.buttonText}>Ver Ticket de Reserva</Text>
+        </TouchableOpacity>
+      )}
+
+      <Modal isVisible={isModalVisible}>
+        <View style={styles.modalContent}>
+          <Image source={{ uri: book.image }} style={styles.modalImage} />
+          <Text style={styles.modalTitle}>{book.title}</Text>
+          <Text style={styles.modalText}>Tiempo de préstamo: 15 días</Text>
+          <View style={styles.modalButtons}>
+            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
+              <Text style={styles.buttonText}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.modalButton, styles.acceptButton]} onPress={handleReserve}>
+              <Text style={styles.buttonText}>Prestar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal isVisible={isTicketModalVisible}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Ticket de Reserva</Text>
+          <Text>Libro: {ticketData?.libro.title}</Text>
+          <Text>Autor: {ticketData?.libro.author}</Text> 
+          <Text>Fecha de Reserva: {new Date().toLocaleDateString()}</Text> 
+          <TouchableOpacity style={styles.downloadButton} onPress={handleDownloadPDF}> 
+            <Text style={styles.buttonText}>Descargar Ticket en PDF</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.modalButton} onPress={() => setTicketModalVisible(false)}>
+            <Text style={styles.buttonText}>Cancelar</Text>
+          </TouchableOpacity>
+        </View> 
+      </Modal>
+
     </ScrollView>
   );
 };
 
-// Estilos
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: '#fff',
-  },
-  bookImage: {
-    width: '100%',
-    height: 500,
-    resizeMode: 'cover',
-  },
-  backgroundCircle: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 1.5)', 
-    borderRadius: 500, 
-    transform: [{ scale: 2 }], 
-    zIndex: -1, 
+    alignItems: 'center',
   },
   topButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 15,
     position: 'absolute',
-    top: 40,
+    top: 10,
     width: '100%',
     zIndex: 1,
   },
   backButton: {
     padding: 10,
   },
-  moreOptionsButton: {
+  heartButton: {
     padding: 10,
   },
-  card: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 1.8)',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 10,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    top: -50,
-  },
-  disponibilidad: {
-    fontSize: 24,
+  genre: {
+    fontSize: 26,
+    top: 20,
+    color: '#000',
+    textAlign: 'center',
+    marginVertical: 10,
+    width: '100%',
+    paddingVertical: 5,
     fontWeight: 'bold',
-    marginBottom: 20,
+  },
+  detailsContainer: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    alignItems: 'flex-start',
+    paddingHorizontal: 15,
+  },
+  bookImage: {
+    width: 150,
+    height: 200,
+    borderRadius: 10,
+    marginRight: 15,
+  },
+  infoContainer: {
+    flex: 1,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 10,
   },
   author: {
-    fontSize: 18,
-    color: '#666',
-    marginBottom: 5,
+    fontSize: 16,
+    marginBottom: 10,
   },
-  genreContainer: {
+  stockText: {
+    fontSize: 16,
+    color: 'green',
+  },
+  reserveButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
   },
-  genreLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginRight: 5,
-  },
-  category: {
-    fontSize: 16,
+  descriptionTitle: {
+    fontSize: 20,
+    marginVertical: 10,
     fontWeight: 'bold',
   },
   description: {
     fontSize: 16,
-    color: '#333',
-    lineHeight: 22,
+    textAlign: 'center',
+    paddingHorizontal: 15,
   },
-  transparentText: {
-    opacity: 0.7, 
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+  downloadButton: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
     borderRadius: 5,
-  },
-  reserveButton: {
-    width: 350,
-    height: 40,
-    justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
-    backgroundColor: '#ffd900',
-    color: 'black',
+    marginTop: 15,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    height: '30%',
+  },
+  modalImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  
+  modalButton: {
+    backgroundColor: '#ccc',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    margin: 5,
+    alignItems: 'center',
+  },
+  acceptButton: {
+    backgroundColor: '#4CAF50',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-    marginLeft: 10,
+    fontWeight: 'bold',
   },
 });
 
