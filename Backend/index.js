@@ -19,7 +19,7 @@ async function cargarLibrosMongo() {
   try {
     //en el .env cambien lo mamada del localhost si usan docker 
     const response = await axios.get(`${process.env.BASE_URL}/ObtenerLibros/getlibrosmongo`);
-    console.log("Respuesta de la ruta:", response.data);
+    //console.log("Respuesta de la ruta:", response.data);
   } catch (error) {
     console.error("Error al hacer la petición:", error);
   }
@@ -38,8 +38,13 @@ mongoose
 //sgundo llenen la base:http://localhost:3000/biblioteca/getlibros/getlibros
 ///ejecuten eso en el thunderclient es en get no pongan nad amas solo el link y sha 
 //despues de eso vuelvana reiniciar el cierren el npm start y tendria que imprimirles los libros de moongo en consola el solo en formato json
+app.use("/biblioteca", librosRoutes); 
 
 app.use("/ObtenerLibros", librosRoutes);
 app.use("/biblioteca/getlibros", librosRoutes);
+app.use("/biblioteca/VerReservas", librosRoutes);
+
+
+
 
 app.listen(port, () => console.log(`App escuchando en el puerto ${port}`));

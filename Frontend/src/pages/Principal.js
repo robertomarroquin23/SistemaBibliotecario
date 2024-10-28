@@ -34,8 +34,8 @@ const colors = [
   "#b2ff00",
   "#ff77ff",
 ];
-
-const API_URL = "http://192.168.1.58:3000/ObtenerLibros/getlibrosmongo";
+//aqui poner simpre la ip de la maquina no local ni 127.0.0.1 si les da un network error corrar ipconfig en la terminal y cambien la ip
+const API_URL = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo";
 {/*const recommendedBooks = [
   {
     title: "El Arte de Programar",
