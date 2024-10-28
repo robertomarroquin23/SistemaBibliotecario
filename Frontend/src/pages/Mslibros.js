@@ -9,6 +9,7 @@ import {
   Image,
 } from "react-native";
 import axios from "axios";
+import { Circle } from 'react-native-progress';
 
 const { width } = Dimensions.get("window");
 
@@ -37,7 +38,15 @@ const MisLibros = ({ navigation }) => {
             librosIds.includes(libro._id)
           );
 
-          setLibrosDetalles(librosFiltrados);
+          const librosConReservas = librosFiltrados.map(libro => {
+            const reserva = reservas.find(res => res.libroId === libro._id && res.idAlumno === "183021");
+            return {
+              ...libro,
+              fechaDevolucion: reserva ? reserva.fechaDevolucion : null,
+            };
+          });
+
+          setLibrosDetalles(librosConReservas);
         } else {
           setLibrosDetalles([]);
         }
@@ -59,6 +68,13 @@ const MisLibros = ({ navigation }) => {
     );
   }
 
+  const calcularTiempoRestante = (fechaDevolucion) => {
+    if (!fechaDevolucion) return 0;
+    const tiempoRestante = new Date(fechaDevolucion) - new Date();
+    const diasRestantes = Math.max(0, Math.ceil(tiempoRestante / (1000 * 60 * 60 * 24)));
+    return diasRestantes;
+  };
+
   return (
     <ScrollView style={styles.scrollContainer}>
       <View style={styles.welcomeMessageContainer}>
@@ -67,17 +83,37 @@ const MisLibros = ({ navigation }) => {
 
       <View style={styles.tarjetasContainer}>
         {librosDetalles.length > 0 ? (
-          librosDetalles.map((libro, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.cardItem}
-              onPress={() => navigation.navigate("DetallesLibro", { book: { ...libro, id: libro._id } })}
-            >
-              <Image source={{ uri: libro.image }} style={styles.bookCover} />
-              <Text style={styles.bookTitleText}>{libro.title}</Text>
-              <Text style={styles.bookAuthorText}>{libro.author}</Text>
-            </TouchableOpacity>
-          ))
+          librosDetalles.map((libro, index) => {
+            const diasRestantes = calcularTiempoRestante(libro.fechaDevolucion);
+            const porcentajeRestante = Math.max(0, Math.min(1, diasRestantes / 15));
+            const porcentajeTexto = diasRestantes ? `${diasRestantes}/15` : "0/15";
+
+            return (
+              <View key={index} style={styles.cardItem}>
+                <TouchableOpacity
+                  style={styles.bookContainer}
+                  onPress={() => navigation.navigate("DetallesLibro", { book: { ...libro, id: libro._id } })}
+                >
+                  <Image source={{ uri: libro.image }} style={styles.bookCover} />
+                  <Text style={styles.bookTitleText}>{libro.title}</Text>
+                  <Text style={styles.bookAuthorText}>{libro.author}</Text>
+                </TouchableOpacity>
+                <View style={styles.progressContainer}>
+                  <View style={styles.circleContainer}>
+                    <Circle
+                      progress={porcentajeRestante}
+                      size={100}
+                      thickness={8}
+                      color={porcentajeRestante > 0.5 ? "green" : "red"}
+                      style={styles.progressCircle}
+                    />
+                    <Text style={styles.progressText}>{porcentajeTexto}</Text> 
+                                     </View>
+                  <Text style={styles.daysRemainingText}>{diasRestantes} días restantes</Text>
+                </View>
+              </View>
+            );
+          })
         ) : (
           <Text style={styles.noBooksText}>No tienes libros reservados.</Text>
         )}
@@ -107,22 +143,28 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   cardItem: {
-    width: (width - 60) / 2,
+    flexDirection: "row",
+    alignItems: "center",
+    width: width - 40,
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 20,
     marginBottom: 20,
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 3,
   },
+  bookContainer: {
+    flex: 1,
+    marginRight: 15,
+    alignItems: "flex-start",
+  },
   bookCover: {
-    width: "100%",
-    height: 150,
-    borderRadius: 20,
+    width: 70,
+    height: 100,
+    borderRadius: 10,
   },
   bookTitleText: {
     marginTop: 10,
@@ -134,6 +176,28 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 14,
     color: "#666",
+  },
+  progressContainer: {
+    alignItems: "center",
+  },
+  circleContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  progressCircle: {
+    marginTop: 10,
+  },
+  progressText: {
+    position: 'absolute',
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  daysRemainingText: {
+    marginTop: 5,
+    fontSize: 14,
+    color: "#333",
   },
   loadingContainer: {
     flex: 1,
