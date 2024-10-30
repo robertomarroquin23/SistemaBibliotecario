@@ -6,6 +6,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Login from './src/pages/LoginScreen/Login';
 import Home from './src/pages/HomeScreen/Home';
 
+import Login from './src/pages/Login';
+import MisLibros from './src/pages/Mslibros';
+import DetallesLibro from './src/pages/Detallerlibros';
+import Principal from './src/pages/Principal'
+import Recuperacion from './src/pages/Recuperacion';
+import Verificacion from './src/pages/Verificacion';
+
+const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -18,8 +26,25 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Home"
-          component={Home}
+          name="MainTabs"
+          component={MainTabs}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="DetallesLibro"
+          component={DetallesLibro}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Verificacion"
+          component={Verificacion}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Recuperacion"
+          component={Recuperacion}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
