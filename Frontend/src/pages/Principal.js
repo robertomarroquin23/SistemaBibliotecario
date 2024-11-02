@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
+
 const { width } = Dimensions.get("window");
 
 const categories = [
@@ -21,6 +22,7 @@ const categories = [
   { title: "Cocina", icon: "restaurant", color: "#66ff66" },
   { title: "Historia", icon: "book", color: "#33ccff" },
 ];
+
 
 const colors = [
   "#ff007f",
@@ -35,10 +37,8 @@ const colors = [
   "#ff77ff",
 ];
 //aqui poner simpre la ip de la maquina no local ni 127.0.0.1 si les da un network error corrar ipconfig en la terminal y cambien la ip
-//const API_URL = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo"; 192.168.0.15:3000
-const API_URL = "http://192.168.0.15:3000/ObtenerLibros/getlibrosmongo";
-{
-  /*const recommendedBooks = [
+const API_URL = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
+{/*const recommendedBooks = [
   {
     title: "El Arte de Programar",
     author: "Donald Knuth",
@@ -76,6 +76,8 @@ const Principal = ({ navigation }) => {
   const [books, setbooks] = useState([]);
   const colorAnimation = useRef(new Animated.Value(0)).current;
   const [recommendedBooks, setRecommendedBooks] = useState([]);
+  const animatedValues = useRef(books.map(() => new Animated.Value(0))).current;
+
 
   useEffect(() => {
     const colorCount = colors.length;
@@ -194,43 +196,38 @@ const Principal = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.scrollContainer}>
+      <View style={styles.header}>
+
+
+        <View style={styles.container}>
+
+          <View style={styles.containeriIcons}>
+            <Image
+              source={{ uri: 'https://picsum.photos/40/40' }}
+              style={styles.userImage}
+            />
+
+            <View style={styles.bellIconContainer}>
+              <Ionicons name="notifications-outline" size={24} color="white" />
+              <View style={styles.notificationBadge} />
+            </View>
+
+          </View>
+
+
+        </View>
+        <Text style={styles.headerName}>Hola, Samuel</Text>
+        <Text style={styles.headerText}>Bienvenido {"\n"}otra vez!!!</Text>
+
+
+
+
+
+      </View>
       <View style={styles.container}>
-        <View style={styles.welcomeMessageContainer}>
-          <Text style={styles.welcomeTexth}>Hola Samuel!</Text>
-          <Text style={styles.welcomeText}>Que {"\n"}buscas hoy</Text>
-        </View>
 
-        <View style={styles.searchContainer}>
-          <Ionicons
-            name="search-outline"
-            size={24}
-            color="black"
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Qué buscas hoy"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
 
-        <View style={styles.gridContainer}>
-          {categories.map((category, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[styles.cardtipo, { backgroundColor: category.color }]}
-            >
-              <Ionicons
-                name={category.icon}
-                size={40}
-                color="gray"
-                style={styles.cardIcon}
-              />
-              <Text style={styles.cardTitle}>{category.title}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+
 
         <View style={styles.tarjetasContainer}>
           <Text style={styles.title}>Libro de la semana</Text>
@@ -307,6 +304,67 @@ const Principal = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  header: {
+    width: "100%",
+    height: 300,
+    backgroundColor: "#000000",
+    borderBottomRightRadius: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  headerName: {
+    color: "#fff",
+    fontSize: 30,
+    fontWeight: "bold",
+    alignSelf: "flex-start",
+    marginBottom: 5,
+    top: -90,
+
+
+  },
+  headerText: {
+    color: "#7a7e7f",
+    fontSize: 25,
+    fontWeight: "bold",
+    textAlign: "left",
+    alignSelf: "flex-start",
+    top: -90,
+
+  },
+  containeriIcons: {
+
+
+
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  }
+
+
+
+
+  ,
+  userImage: {
+    top: 15,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 260,
+
+  },
+  bellIconContainer: {
+    position: 'relative',
+  },
+  notificationBadge: {
+    position: 'absolute',
+    right: -5,
+    top: -5,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'red',
+  },
   scrollContainer: {
     flex: 1,
     backgroundColor: "#fff",

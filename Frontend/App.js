@@ -7,6 +7,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 //import Login from "./src/pages/Login";
 import MisLibros from "./src/pages/Mslibros";
 import DetallesLibro from "./src/pages/Detallerlibros";
+import Libros  from "./src/pages/libros";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -22,6 +23,9 @@ const MainTabs = () => {
             iconName = "home";
           }
           if (route.name === "MisLibros") {
+            iconName = "book";
+          }
+          if (route.name === "Libros") {
             iconName = "book";
           }
 
@@ -57,6 +61,11 @@ const MainTabs = () => {
       <Tab.Screen
         name="MisLibros"
         component={MisLibros}
+        options={{ headerShown: false }}
+      />
+        <Tab.Screen
+        name="Libros"
+        component={Libros}
         options={{ headerShown: false }}
       />
     </Tab.Navigator>
