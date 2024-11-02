@@ -14,8 +14,8 @@ import { Circle } from 'react-native-progress';
 const { width } = Dimensions.get("window");
 
 const MisLibros = ({ navigation }) => {
-  const API_URL = "http://192.168.1.63:3000/biblioteca/VerReservas";
-  const API_URL2 = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo";
+  const API_URL = "http://192.168.1.70:3000/biblioteca/VerReservas";
+  const API_URL2 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
 
   const [librosDetalles, setLibrosDetalles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -60,6 +60,13 @@ const MisLibros = ({ navigation }) => {
     fetchData();
   }, []);
 
+  const calcularTiempoRestante = (fechaDevolucion) => {
+    if (!fechaDevolucion) return 0;
+    const tiempoRestante = new Date(fechaDevolucion) - new Date();
+    const diasRestantes = Math.max(0, Math.ceil(tiempoRestante / (1000 * 60 * 60 * 24)));
+    return diasRestantes;
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -68,25 +75,19 @@ const MisLibros = ({ navigation }) => {
     );
   }
 
-  const calcularTiempoRestante = (fechaDevolucion) => {
-    if (!fechaDevolucion) return 0;
-    const tiempoRestante = new Date(fechaDevolucion) - new Date();
-    const diasRestantes = Math.max(0, Math.ceil(tiempoRestante / (1000 * 60 * 60 * 24)));
-    return diasRestantes;
-  };
-
   return (
     <ScrollView style={styles.scrollContainer}>
-      <View style={styles.welcomeMessageContainer}>
-        <Text style={styles.welcomeText}>Estos son tus libros reservados</Text>
+      <View style={styles.messageContainer}>
+        <Text style={styles.messageText}>Esta es tu lista de libros reservados</Text>
       </View>
 
       <View style={styles.tarjetasContainer}>
         {librosDetalles.length > 0 ? (
           librosDetalles.map((libro, index) => {
             const diasRestantes = calcularTiempoRestante(libro.fechaDevolucion);
-            const porcentajeRestante = Math.max(0, Math.min(1, diasRestantes / 15));
-            const porcentajeTexto = diasRestantes ? `${diasRestantes}/15` : "0/15";
+            const diasTranscurridos = 15 - diasRestantes;
+            const porcentajeRestante = Math.max(0, Math.min(1, diasTranscurridos / 15));
+            const porcentajeTexto = `${diasTranscurridos}/15`;
 
             return (
               <View key={index} style={styles.cardItem}>
@@ -104,11 +105,11 @@ const MisLibros = ({ navigation }) => {
                       progress={porcentajeRestante}
                       size={100}
                       thickness={8}
-                      color={porcentajeRestante > 0.5 ? "green" : "red"}
+                      color={diasRestantes > 5 ? "green" : "red"}
                       style={styles.progressCircle}
                     />
-                    <Text style={styles.progressText}>{porcentajeTexto}</Text> 
-                                     </View>
+                    <Text style={styles.progressText}>{porcentajeTexto}</Text>
+                  </View>
                   <Text style={styles.daysRemainingText}>{diasRestantes} días restantes</Text>
                 </View>
               </View>
@@ -127,20 +128,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  welcomeMessageContainer: {
-    marginTop: 20,
-    marginBottom: 20,
+  messageContainer: {
+    width: width * 0.9,
+    height: 200,
+    backgroundColor: "#e0f7fa",
+    borderRadius: 20,
+    alignSelf: "center",
     alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 20,
+    top: 15,
   },
-  welcomeText: {
-    fontSize: 24,
+  messageText: {
+    fontSize: 22,
     fontWeight: "bold",
-    color: "#333",
+    color: "#00796b",
+    textAlign: "center",
   },
   tarjetasContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 70, 
   },
   cardItem: {
     flexDirection: "row",
@@ -155,6 +162,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 3,
+    alignSelf: "center",  // Centra las tarjetas en la pantalla
   },
   bookContainer: {
     flex: 1,
@@ -212,8 +220,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#888",
     textAlign: "center",
-    marginTop: 20,
-  },
-});
-
+    marginTop: 20, 
+  }, 
+}); 
+ 
 export default MisLibros;
