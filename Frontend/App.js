@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Login from "./src/pages/LoginScreen/Login";
 import Home from "./src/pages/HomeScreen/Home";
 
-import Login from "./src/pages/Login";
+//import Login from "./src/pages/Login";
 import MisLibros from "./src/pages/Mslibros";
 import DetallesLibro from "./src/pages/Detallerlibros";
 import Principal from "./src/pages/Principal";
@@ -82,7 +82,11 @@ const App = () => {
           component={MainTabs}
           options={{ headerShown: false }}
         />
-
+        <Stack.Screen
+          name="Principal"
+          component={Principal}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="DetallesLibro"
           component={DetallesLibro}

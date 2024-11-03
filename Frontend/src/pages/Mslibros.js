@@ -9,13 +9,16 @@ import {
   Image,
 } from "react-native";
 import axios from "axios";
-import { Circle } from 'react-native-progress';
+import { Circle } from "react-native-progress";
 
 const { width } = Dimensions.get("window");
 
 const MisLibros = ({ navigation }) => {
-  const API_URL = "http://192.168.1.63:3000/biblioteca/VerReservas";
-  const API_URL2 = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo";
+  // const API_URL = "http://192.168.1.63:3000/biblioteca/VerReservas";
+  // const API_URL2 = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo";
+
+  const API_URL = "http://192.168.0.15:3000/biblioteca/VerReservas";
+  const API_URL2 = "http://192.168.0.15:3000/ObtenerLibros/getlibrosmongo";
 
   const [librosDetalles, setLibrosDetalles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +26,9 @@ const MisLibros = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseReservas = await axios.post(API_URL, { userId: "183021" });
+        const responseReservas = await axios.post(API_URL, {
+          userId: "183021",
+        });
         const reservas = responseReservas.data;
 
         const librosIds = reservas
@@ -38,8 +43,10 @@ const MisLibros = ({ navigation }) => {
             librosIds.includes(libro._id)
           );
 
-          const librosConReservas = librosFiltrados.map(libro => {
-            const reserva = reservas.find(res => res.libroId === libro._id && res.idAlumno === "183021");
+          const librosConReservas = librosFiltrados.map((libro) => {
+            const reserva = reservas.find(
+              (res) => res.libroId === libro._id && res.idAlumno === "183021"
+            );
             return {
               ...libro,
               fechaDevolucion: reserva ? reserva.fechaDevolucion : null,
@@ -71,7 +78,10 @@ const MisLibros = ({ navigation }) => {
   const calcularTiempoRestante = (fechaDevolucion) => {
     if (!fechaDevolucion) return 0;
     const tiempoRestante = new Date(fechaDevolucion) - new Date();
-    const diasRestantes = Math.max(0, Math.ceil(tiempoRestante / (1000 * 60 * 60 * 24)));
+    const diasRestantes = Math.max(
+      0,
+      Math.ceil(tiempoRestante / (1000 * 60 * 60 * 24))
+    );
     return diasRestantes;
   };
 
@@ -85,16 +95,28 @@ const MisLibros = ({ navigation }) => {
         {librosDetalles.length > 0 ? (
           librosDetalles.map((libro, index) => {
             const diasRestantes = calcularTiempoRestante(libro.fechaDevolucion);
-            const porcentajeRestante = Math.max(0, Math.min(1, diasRestantes / 15));
-            const porcentajeTexto = diasRestantes ? `${diasRestantes}/15` : "0/15";
+            const porcentajeRestante = Math.max(
+              0,
+              Math.min(1, diasRestantes / 15)
+            );
+            const porcentajeTexto = diasRestantes
+              ? `${diasRestantes}/15`
+              : "0/15";
 
             return (
               <View key={index} style={styles.cardItem}>
                 <TouchableOpacity
                   style={styles.bookContainer}
-                  onPress={() => navigation.navigate("DetallesLibro", { book: { ...libro, id: libro._id } })}
+                  onPress={() =>
+                    navigation.navigate("DetallesLibro", {
+                      book: { ...libro, id: libro._id },
+                    })
+                  }
                 >
-                  <Image source={{ uri: libro.image }} style={styles.bookCover} />
+                  <Image
+                    source={{ uri: libro.image }}
+                    style={styles.bookCover}
+                  />
                   <Text style={styles.bookTitleText}>{libro.title}</Text>
                   <Text style={styles.bookAuthorText}>{libro.author}</Text>
                 </TouchableOpacity>
@@ -107,9 +129,11 @@ const MisLibros = ({ navigation }) => {
                       color={porcentajeRestante > 0.5 ? "green" : "red"}
                       style={styles.progressCircle}
                     />
-                    <Text style={styles.progressText}>{porcentajeTexto}</Text> 
-                                     </View>
-                  <Text style={styles.daysRemainingText}>{diasRestantes} días restantes</Text>
+                    <Text style={styles.progressText}>{porcentajeTexto}</Text>
+                  </View>
+                  <Text style={styles.daysRemainingText}>
+                    {diasRestantes} días restantes
+                  </Text>
                 </View>
               </View>
             );
@@ -181,18 +205,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   circleContainer: {
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
   },
   progressCircle: {
     marginTop: 10,
   },
   progressText: {
-    position: 'absolute',
+    position: "absolute",
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
   daysRemainingText: {
     marginTop: 5,

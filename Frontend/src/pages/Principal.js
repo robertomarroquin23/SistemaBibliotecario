@@ -35,7 +35,8 @@ const colors = [
   "#ff77ff",
 ];
 //aqui poner simpre la ip de la maquina no local ni 127.0.0.1 si les da un network error corrar ipconfig en la terminal y cambien la ip
-const API_URL = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo";
+//const API_URL = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo"; 192.168.0.15:3000
+const API_URL = "http://192.168.0.15:3000/ObtenerLibros/getlibrosmongo";
 {
   /*const recommendedBooks = [
   {
