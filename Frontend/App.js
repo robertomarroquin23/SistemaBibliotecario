@@ -4,8 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import Login from "./src/pages/Login";
-import Principal from "./src/pages/Principal";
+//import Login from "./src/pages/Login";
 import MisLibros from "./src/pages/Mslibros";
 import DetallesLibro from "./src/pages/Detallerlibros";
 
@@ -78,7 +77,11 @@ const App = () => {
           component={MainTabs}
           options={{ headerShown: false }}
         />
-
+        <Stack.Screen
+          name="Principal"
+          component={Principal}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="DetallesLibro"
           component={DetallesLibro}

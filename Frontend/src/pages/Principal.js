@@ -35,8 +35,10 @@ const colors = [
   "#ff77ff",
 ];
 //aqui poner simpre la ip de la maquina no local ni 127.0.0.1 si les da un network error corrar ipconfig en la terminal y cambien la ip
-const API_URL = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo";
-{/*const recommendedBooks = [
+//const API_URL = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo"; 192.168.0.15:3000
+const API_URL = "http://192.168.0.15:3000/ObtenerLibros/getlibrosmongo";
+{
+  /*const recommendedBooks = [
   {
     title: "El Arte de Programar",
     author: "Donald Knuth",
@@ -69,7 +71,7 @@ const API_URL = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo";
   },
 ];*/}
 
-const Principal = ({navigation}) => {
+const Principal = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [books, setbooks] = useState([]);
   const colorAnimation = useRef(new Animated.Value(0)).current;
@@ -93,7 +95,7 @@ const Principal = ({navigation}) => {
     ).start();
   }, [colorAnimation]);
 
- {/* useEffect(async () => {
+  {/* useEffect(async () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
@@ -131,7 +133,7 @@ const Principal = ({navigation}) => {
     fetchBooks();
   }, []);
 
- {/* const Books = [
+  {/* const Books = [
     {
       title: "Libro 1",
       author: "Autor 1",
@@ -276,27 +278,27 @@ const Principal = ({navigation}) => {
           <Text style={styles.texta}>Tambien podria Gustarte</Text>
         </View>
         <View style={styles.container}>
-            {books.map((book, index) => (
-                      <TouchableOpacity 
-                        key={index} 
-                        style={styles.cardItem}
-                        onPress={() => {
-                        
-                          navigation.navigate("DetallesLibro", { 
-                            book: {
-                              ...book,
-                              id: book._id, 
-                              categories: book.categories 
-                            } 
-                          }); 
-                        }} 
-                      > 
-                <Image source={{ uri: book.image }} style={styles.bookCover} /> 
-                <Text style={styles.bookTitleText}>{book.title}</Text> 
-                <Text style={styles.bookAuthorText}>{book.author}</Text> 
-              </TouchableOpacity>
-            ))} 
-          </View>
+          {books.map((book, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.cardItem}
+              onPress={() => {
+
+                navigation.navigate("DetallesLibro", {
+                  book: {
+                    ...book,
+                    id: book._id,
+                    categories: book.categories
+                  }
+                });
+              }}
+            >
+              <Image source={{ uri: book.image }} style={styles.bookCover} />
+              <Text style={styles.bookTitleText}>{book.title}</Text>
+              <Text style={styles.bookAuthorText}>{book.author}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
 
       </View>
@@ -554,7 +556,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   bookTitleText: {
-    marginTop: 225, 
+    marginTop: 225,
     fontSize: 15,
     fontWeight: "bold",
     color: "#333",

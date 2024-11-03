@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Modal from 'react-native-modal';
-import axios from 'axios';
-import * as Print from 'expo-print'; 
-import { shareAsync } from 'expo-sharing'; 
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import Modal from "react-native-modal";
+import axios from "axios";
+import * as Print from "expo-print";
+import { shareAsync } from "expo-sharing";
 
 const DetallesLibro = ({ route, navigation }) => {
   const { book } = route.params;
@@ -18,7 +25,8 @@ const DetallesLibro = ({ route, navigation }) => {
     setModalVisible(!isModalVisible);
   };
 
-  const API_URL = "http://192.168.1.63:3000/biblioteca/Reservarlibro";
+  //const API_URL = "http://192.168.1.63:3000/biblioteca/Reservarlibro";
+  const API_URL = "http://192.168.0.15:3000/biblioteca/Reservarlibro";
 
   const handleReserve = async () => {
     try {
@@ -30,14 +38,13 @@ const DetallesLibro = ({ route, navigation }) => {
         setTicketData(response.data);
         setShowDownloadButton(true);
       } else {
-        console.log('Error al reservar:', response.data);
+        console.log("Error al reservar:", response.data);
       }
     } catch (error) {
-      console.error('Error en la petición:', error);
+      console.error("Error en la petición:", error);
     } finally {
-      toggleModal(); 
+      toggleModal();
     }
-    
   };
 
   const handleDownloadPDF = async () => {
@@ -143,21 +150,23 @@ const DetallesLibro = ({ route, navigation }) => {
       const { uri } = await Print.printToFileAsync({ html: htmlContent });
       await shareAsync(uri);
     } catch (error) {
-      console.error('Error al generar el PDF:', error);
+      console.error("Error al generar el PDF:", error);
     }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.topButtonsContainer}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" size={30} color="black" />
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="arrow-back" size={30} color="black" />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.heartButton}>
           <Icon name="favorite-border" size={20} color="#FF0000" />
         </TouchableOpacity>
-
       </View>
 
       <Text style={styles.titulo}>Título de la Pantalla</Text>
@@ -169,10 +178,14 @@ const DetallesLibro = ({ route, navigation }) => {
           <Text style={styles.title}>{book.title}</Text>
           <Text style={styles.author}>By {book.author}</Text>
           <Text style={styles.stockText}>
-            Disponibilidad: {isAvailable ? 'Disponible' : 'No Disponible'} ({book.stock} en stock)
+            Disponibilidad: {isAvailable ? "Disponible" : "No Disponible"} (
+            {book.stock} en stock)
           </Text>
           {isAvailable && (
-            <TouchableOpacity style={styles.reserveButton} onPress={toggleModal}>
+            <TouchableOpacity
+              style={styles.reserveButton}
+              onPress={toggleModal}
+            >
               <Icon name="event" size={20} color="#fff" />
               <Text style={styles.buttonText}>Reservar</Text>
             </TouchableOpacity>
@@ -184,7 +197,10 @@ const DetallesLibro = ({ route, navigation }) => {
       <Text style={styles.description}>{book.description}</Text>
 
       {showDownloadButton && (
-        <TouchableOpacity style={styles.downloadButton} onPress={() => setTicketModalVisible(true)}>
+        <TouchableOpacity
+          style={styles.downloadButton}
+          onPress={() => setTicketModalVisible(true)}
+        >
           <Text style={styles.buttonText}>Ver Ticket de Reserva</Text>
         </TouchableOpacity>
       )}
@@ -198,7 +214,10 @@ const DetallesLibro = ({ route, navigation }) => {
             <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
               <Text style={styles.buttonText}>Cancelar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.modalButton, styles.acceptButton]} onPress={handleReserve}>
+            <TouchableOpacity
+              style={[styles.modalButton, styles.acceptButton]}
+              onPress={handleReserve}
+            >
               <Text style={styles.buttonText}>Prestar</Text>
             </TouchableOpacity>
           </View>
@@ -209,17 +228,22 @@ const DetallesLibro = ({ route, navigation }) => {
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Ticket de Reserva</Text>
           <Text>Libro: {ticketData?.libro.title}</Text>
-          <Text>Autor: {ticketData?.libro.author}</Text> 
-          <Text>Fecha de Reserva: {new Date().toLocaleDateString()}</Text> 
-          <TouchableOpacity style={styles.downloadButton} onPress={handleDownloadPDF}> 
+          <Text>Autor: {ticketData?.libro.author}</Text>
+          <Text>Fecha de Reserva: {new Date().toLocaleDateString()}</Text>
+          <TouchableOpacity
+            style={styles.downloadButton}
+            onPress={handleDownloadPDF}
+          >
             <Text style={styles.buttonText}>Descargar Ticket en PDF</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.modalButton} onPress={() => setTicketModalVisible(false)}>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => setTicketModalVisible(false)}
+          >
             <Text style={styles.buttonText}>Cancelar</Text>
           </TouchableOpacity>
-        </View> 
+        </View>
       </Modal>
-
     </ScrollView>
   );
 };
@@ -227,16 +251,16 @@ const DetallesLibro = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
   },
   topButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     padding: 15,
-    position: 'absolute',
+    position: "absolute",
     top: 10,
-    width: '100%',
+    width: "100%",
     zIndex: 1,
   },
   backButton: {
@@ -248,17 +272,17 @@ const styles = StyleSheet.create({
   genre: {
     fontSize: 26,
     top: 20,
-    color: '#000',
-    textAlign: 'center',
+    color: "#000",
+    textAlign: "center",
     marginVertical: 10,
-    width: '100%',
+    width: "100%",
     paddingVertical: 5,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   detailsContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginVertical: 20,
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     paddingHorizontal: 15,
   },
   bookImage: {
@@ -272,7 +296,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   author: {
     fontSize: 16,
@@ -280,12 +304,12 @@ const styles = StyleSheet.create({
   },
   stockText: {
     fontSize: 16,
-    color: 'green',
+    color: "green",
   },
   reserveButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#4CAF50',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#4CAF50",
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
@@ -293,61 +317,61 @@ const styles = StyleSheet.create({
   descriptionTitle: {
     fontSize: 20,
     marginVertical: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   description: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     paddingHorizontal: 15,
   },
   downloadButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 15,
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
-    height: '30%',
+    height: "30%",
   },
   modalImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
     borderRadius: 10,
     marginBottom: 10,
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  
+
   modalButton: {
-    backgroundColor: '#ccc',
+    backgroundColor: "#ccc",
     padding: 10,
     borderRadius: 5,
     flex: 1,
     margin: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   acceptButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
 
