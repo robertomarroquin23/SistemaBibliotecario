@@ -69,8 +69,8 @@ export class ControllerLibros {
   static async VerReservas(req, res) {  
     try {  
       const { idAlumno } = req.body;
-//      const reservas = await Registro.find({ idAlumno: idAlumno }); 
-const reservas = await Registro.find(); 
+      //const reservas = await Registro.find({ idAlumno: idAlumno }); 
+      const reservas = await Registro.find(); 
 
 
         if (reservas.length === 0) { 
