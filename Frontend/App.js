@@ -9,6 +9,7 @@ import Home from "./src/pages/HomeScreen/Home";
 //import Login from "./src/pages/Login";
 import MisLibros from "./src/pages/Mslibros";
 import DetallesLibro from "./src/pages/Detallerlibros";
+import Perfil from "./src/pages/perfil";
 
 import Principal from "./src/pages/Principal";
 import Recuperacion from "./src/pages/Recuperacion";
@@ -33,6 +34,9 @@ const MainTabs = () => {
             iconName = "book";
           }
           if (route.name === "Libros") {
+            iconName = "book";
+          }
+          if (route.name === "Perfil") {
             iconName = "book";
           }
 
@@ -75,6 +79,12 @@ const MainTabs = () => {
         component={Libros}
         options={{ headerShown: false }}
       />
+        <Tab.Screen
+        name="Perfil"
+        component={Perfil}
+        options={{ headerShown: false }}
+      />
+
     </Tab.Navigator>
   );
 };

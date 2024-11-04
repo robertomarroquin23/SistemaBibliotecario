@@ -1,0 +1,271 @@
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  Dimensions,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+const { width, height } = Dimensions.get("window");
+
+const Perfil = () => {
+  const [selectedTab, setSelectedTab] = useState("Información");
+  const [isEditing, setIsEditing] = useState(false);
+  const [profileImage, setProfileImage] = useState("https://via.placeholder.com/100");
+  const [userName, setUserName] = useState("Nombre del Usuario");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [birthDate, setBirthDate] = useState(new Date());
+
+  const [userInfo, setUserInfo] = useState({
+    edad: "25",
+    fechaNacimiento: new Date(1998, 0, 1), 
+    ciudad: "San Salvador",
+    carnet: "12345678",
+    carrera: "Ingeniería Informática",
+    anioIngreso: "2022",
+    correo: "usuario@universidad.edu",
+    facultad: "Ingeniería y Arquitectura",
+    telefono: "+503 1234 5678",
+    direccion: "Colonia Universitaria, San Salvador",
+    pais: "El Salvador",
+    identificacion: "987654321",
+  });
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const pickImage = async () => {
+    if (!isEditing) return; 
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
+    }
+  };
+
+  const renderInfoBox = (label, value, key) => (
+    <View style={styles.infoBox} key={key}>
+      <Text style={styles.infoLabel}>{label}</Text>
+      {key === "fechaNacimiento" && showDatePicker && isEditing ? (
+        <>
+          <TextInput
+            style={[styles.infoValue, styles.input]}
+            value={birthDate.toLocaleDateString()}
+            editable={false}
+          />
+          <DateTimePicker
+            value={birthDate}
+            mode="date"
+            display="default"
+            onChange={(event, selectedDate) => {
+              setShowDatePicker(false);
+              const currentDate = selectedDate || birthDate;
+              if (currentDate instanceof Date) {
+                setBirthDate(currentDate);
+                setUserInfo((prevState) => ({
+                  ...prevState,
+                  [key]: currentDate,
+                }));
+              }
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <TouchableOpacity onPress={() => {
+            if (isEditing) {
+              setShowDatePicker(true);
+            }
+          }}>
+            <Text style={styles.infoValue}>{value instanceof Date ? value.toLocaleDateString() : value}</Text>
+          </TouchableOpacity>
+          {isEditing && (
+            <TextInput
+              style={[styles.infoValue, styles.input]}
+              value={value}
+              editable={false} 
+            />
+          )}
+        </>
+      )}
+    </View>
+  );
+
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.editIcon} onPress={handleEditToggle}>
+          <MaterialCommunityIcons
+            name={isEditing ? "check" : "pencil"}
+            size={24}
+            color="#fff"
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={pickImage} disabled={!isEditing}>
+          <Image source={{ uri: profileImage }} style={styles.profileImage} />
+        </TouchableOpacity>
+
+        {isEditing ? (
+          <TextInput
+            style={styles.userName}
+            value={userName}
+            onChangeText={setUserName}
+          />
+        ) : (
+          <Text style={styles.userName}>{userName}</Text>
+        )}
+      </View>
+
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[styles.tab, selectedTab === "Información" && styles.activeTab]}
+          onPress={() => setSelectedTab("Información")}
+        >
+          <Text style={[styles.tabText, selectedTab === "Información" && styles.activeTabText]}>
+            Información
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, selectedTab === "Historial de Préstamos" && styles.activeTab]}
+          onPress={() => setSelectedTab("Historial de Préstamos")}
+        >
+          <Text style={[styles.tabText, selectedTab === "Historial de Préstamos" && styles.activeTabText]}>
+            Historial de Préstamos
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.tabContent}>
+        {selectedTab === "Información" ? (
+          <View style={styles.infoContainer}>
+            {renderInfoBox("Edad", userInfo.edad, "edad")}
+            {renderInfoBox("Fecha de Nacimiento", userInfo.fechaNacimiento, "fechaNacimiento")}
+            {renderInfoBox("Ciudad", userInfo.ciudad, "ciudad")}
+            {renderInfoBox("Carnet", userInfo.carnet, "carnet")}
+            {renderInfoBox("Carrera", userInfo.carrera, "carrera")}
+            {renderInfoBox("Año de Ingreso", userInfo.anioIngreso, "anioIngreso")}
+            {renderInfoBox("Correo Electrónico", userInfo.correo, "correo")}
+            {renderInfoBox("Facultad", userInfo.facultad, "facultad")}
+            {renderInfoBox("Teléfono", userInfo.telefono, "telefono")}
+            {renderInfoBox("Dirección", userInfo.direccion, "direccion")}
+            {renderInfoBox("País", userInfo.pais, "pais")}
+            {renderInfoBox("Identificación", userInfo.identificacion, "identificacion")}
+          </View>
+        ) : (
+          <Text style={styles.contentText}>Historial de préstamos...</Text>
+        )}
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  header: {
+    backgroundColor: "#000",
+    width: "100%",
+    height: height * 0.4,
+    alignItems: "center",
+    paddingTop: 20,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  editIcon: {
+    position: "absolute",
+    top: 70,
+    right: 20,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: "#fff",
+    marginBottom: 10,
+    marginTop: 30,
+  },
+  userName: {
+    fontSize: 24,
+    color: "#fff",
+    fontWeight: "bold",
+    marginTop: 10,
+    textAlign: "center",
+  },
+  tabContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  tab: {
+    padding: 10,
+    paddingHorizontal: 20,
+    
+  },
+  activeTab: {
+    backgroundColor: "#000",
+    borderRadius: 10,
+  },
+  tabText: {
+    fontSize: 16,
+    color: "#555",
+  },
+  activeTabText: {
+    color: "#fff",
+  },
+  tabContent: {
+    paddingHorizontal: 20,
+  },
+  infoContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    marginBottom: 100,
+
+
+  },
+  infoBox: {
+    width: "48%",
+    marginBottom: 20,
+  },
+  infoLabel: {
+    fontSize: 14,
+    color: "#000",
+  },
+  infoValue: {
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "bold",
+    marginVertical: 10, 
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 5,
+  },
+  contentText: {
+    fontSize: 16,
+    color: "#555",
+    textAlign: "center",
+  },
+});
+
+export default Perfil;
