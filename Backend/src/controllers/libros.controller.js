@@ -5,12 +5,6 @@ import Books from "../models/libros.models.js";
 const API_KEY = process.env.API_KEY;
 
 export class LibrosController {
-  async get(req, res) {
-    const libros = await Books.find();
-    console.log(libros);
-    return res.status(200).json(libros);
-  }
-
   async getlibros(req, res) {
     const categoriesArray = [
       "fiction",
@@ -42,10 +36,13 @@ export class LibrosController {
         image: item.volumeInfo.imageLinks
           ? item.volumeInfo.imageLinks.thumbnail
           : "https://example.com/default.jpg",
-        description: item.volumeInfo.description
-          ? item.volumeInfo.description
-          : "Sin descripcion",
-        isbn: item.volumeInfo.industryIdentifiers[0],
+        description: item.volumeInfo.description || "Sin descripción",
+        isbn: item.volumeInfo.industryIdentifiers
+          ? {
+            type: item.volumeInfo.industryIdentifiers[0].type,
+            identifier: item.volumeInfo.industryIdentifiers[0].identifier,
+          }
+          : { type: "Unknown", identifier: "N/A" },
         categories: item.volumeInfo.categories
           ? item.volumeInfo.categories[0]
           : "Sin categoría",
@@ -78,87 +75,22 @@ export class LibrosController {
     }
   }
 
-  async editBooks(req, res) {
-    const _id = req.params._id;
-    const {
-      title,
-      author,
-      image,
+  async editstock(req, res) { }
+
+  async savebooks(req, res) {
+    const newProduct = new Products({
+      name,
       description,
-      isbn,
-      categories,
-      maturity,
-      previewLink,
+      price,
       stock,
-    } = req.body;
+      categoryid,
+      image: `./uploads/${req.file.filename}`,
+      update_date: new Date(),
+      creation_date: new Date(),
+      createdby: userId,
+      updatedby: userId,
+    });
 
-    const edition = await Books.findById({ _id });
-
-    try {
-      edition.title = title;
-      edition.author = author;
-      edition.image = image;
-      edition.description = description;
-      edition.isbn = isbn;
-      edition.categories = categories;
-      edition.maturity = edition;
-      edition.previewLink = edition;
-      edition.stock = edition;
-      edition.maturity = maturity;
-      edition.previewLink = previewLink;
-      edition.stock = stock;
-      await edition.save();
-      res.status(200).json(edition);
-    } catch (error) {
-      res.status(500).json({ error: "Error al editar el producto" });
-    }
-  }
-
-  async createbooks(req, res) {
-    const {
-      title,
-      author,
-      image,
-      description,
-      isbn,
-      categories,
-      maturity,
-      previewLink,
-      stock,
-    } = req.body;
-
-    try {
-      const crearlibro = new Books({
-        title: title,
-        author: author,
-        image: image,
-        description: description,
-        isbn: isbn,
-        categories: categories,
-        maturity: maturity,
-        previewLink: previewLink,
-        stock: stock,
-      });
-
-      const saveBooks = await crearlibro.save();
-      res.status(200).json(saveBooks);
-    } catch (error) {
-      res.status(500).json(error, "no messi");
-    }
-  }
-
-  async deletebooks(req, res) {
-    const _id = req.params._id;
-
-    const edition = await Books.findById({ _id });
-    if (!edition) {
-      throw new Error("El producto no existe");
-    }
-    try {
-      await Books.deleteOne({ _id });
-      return res.status(200).json({ message: "Producto eliminado" });
-    } catch (error) {
-      return res.status(500).json({ error: "Error al eliminar el producto" });
-    }
+    const saveProduct = await newProduct.save();
   }
 }
