@@ -28,21 +28,6 @@ async function cargarLibrosMongo() {
   }
 }
 
-async function cargarLibrosMongo() {
-  console.log("el diablo.");
-  app.use("/biblioteca/getlibros", librosRoutes);
-
-  try {
-    //en el .env cambien lo mamada del localhost si usan docker
-    const response = await axios.get(
-      `${process.env.BASE_URL}/ObtenerLibros/getlibrosmongo`
-    );
-    //console.log("Respuesta de la ruta:", response.data);
-  } catch (error) {
-    console.error("Error al hacer la petición:", error);
-  }
-}
-
 // O, si prefieres permitir solo un origen específico
 app.use(
   cors({

@@ -23,33 +23,63 @@ const categories = [
   { title: "Historia", icon: "book", color: "#33ccff" },
 ];
 
-
 const colors = [
-  '#ff007f',
-  '#39ff14', 
-  '#00f0ff', 
-  '#eaff00', 
-  '#ff5f00',
-  '#8a2be2', 
-  '#ff3f3f', 
-  '#00cfc1', 
-  '#b2ff00',
-  '#ff77ff', 
+  "#ff007f",
+  "#39ff14",
+  "#00f0ff",
+  "#eaff00",
+  "#ff5f00",
+  "#8a2be2",
+  "#ff3f3f",
+  "#00cfc1",
+  "#b2ff00",
+  "#ff77ff",
 ];
-
-const recommendedBooks = [
-  { title: 'El Arte de Programar', author: 'Donald Knuth', image: 'https://via.placeholder.com/60x90' },
-  { title: 'La Magia de Pensar en Grande', author: 'David J. Schwartz', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Cien Años de Soledad', author: 'Gabriel García Márquez', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Los Pilares de la Tierra', author: 'Ken Follett', image: 'https://via.placeholder.com/60x90' },
-  { title: '1984', author: 'George Orwell', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Orgullo y Prejuicio', author: 'Jane Austen', image: 'https://via.placeholder.com/60x90' },
-];
+//aqui poner simpre la ip de la maquina no local ni 127.0.0.1 si les da un network error corrar ipconfig en la terminal y cambien la ip
+//const API_URL = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo"; 192.168.0.15:3000
+const API_URL = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
+{
+  /*const recommendedBooks = [
+  {
+    title: "El Arte de Programar",
+    author: "Donald Knuth",
+    image: "https://via.placeholder.com/60x90",
+  },
+  {
+    title: "La Magia de Pensar en Grande",
+    author: "David J. Schwartz",
+    image: "https://via.placeholder.com/60x90",
+  },
+  {
+    title: "Cien Años de Soledad",
+    author: "Gabriel García Márquez",
+    image: "https://via.placeholder.com/60x90",
+  },
+  {
+    title: "Los Pilares de la Tierra",
+    author: "Ken Follett",
+    image: "https://via.placeholder.com/60x90",
+  },
+  {
+    title: "1984",
+    author: "George Orwell",
+    image: "https://via.placeholder.com/60x90",
+  },
+  {
+    title: "Orgullo y Prejuicio",
+    author: "Jane Austen",
+    image: "https://via.placeholder.com/60x90",
+  },
+];*/
+}
 
 const Principal = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [books, setbooks] = useState([]);
   const colorAnimation = useRef(new Animated.Value(0)).current;
+  const [recommendedBooks, setRecommendedBooks] = useState([]);
+  const animatedValues = useRef(books.map(() => new Animated.Value(0))).current;
+
   useEffect(() => {
     const colorCount = colors.length;
     Animated.loop(
@@ -67,23 +97,101 @@ const Principal = ({ navigation }) => {
       ])
     ).start();
   }, [colorAnimation]);
-  
 
+  {
+    /* useEffect(async () => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://www.googleapis.com/books/v1/volumes?q=random&key=${API_KEY}`
+        );
+        const fetchedbooks = response.data.items.map((item) => ({
+          title: item.volumeInfo.title,
+          author: item.volumeInfo.authors
+            ? item.volumeInfo.authors[0]
+            : "Autor desconocido",
+          image: item.volumeInfo.imageLinks
+            ? item.volumeInfo.imageLinks.thumbnail
+            : "https://example.com/default.jpg",
+        }));
+        setbooks(fetchedbooks);
+      } catch (error) {
+        console.error("Error al obtener libros:", error);
+      }
+    };
 
+    fetchData();
+  }, []);*/
+  }
+  ///funcion para obtener los libros
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        setbooks(response.data.slice(0, 20)); //20 libros
+        setRecommendedBooks(response.data.slice(0, 5)); // 5 libros
+      } catch (error) {
+        console.error("sucedio un error :", error);
+      }
+    };
 
-const books = [
-  { title: 'Libro 1', author: 'Autor 1', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Libro 2', author: 'Autor 2', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Libro 3', author: 'Autor 3', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Libro 4', author: 'Autor 4', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Libro 5', author: 'Autor 5', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Libro 6', author: 'Autor 6', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Libro 7', author: 'Autor 7', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Libro 8', author: 'Autor 8', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Libro 9', author: 'Autor 9', image: 'https://via.placeholder.com/60x90' },
-  { title: 'Libro 10', author: 'Autor 9', image: 'https://via.placeholder.com/60x90' },
+    fetchBooks();
+  }, []);
 
-];
+  {
+    /* const Books = [
+    {
+      title: "Libro 1",
+      author: "Autor 1",
+      image: "https://via.placeholder.com/60x90",
+    },
+    {
+      title: "Libro 2",
+      author: "Autor 2",
+      image: "https://via.placeholder.com/60x90",
+    },
+    {
+      title: "Libro 3",
+      author: "Autor 3",
+      image: "https://via.placeholder.com/60x90",
+    },
+    {
+      title: "Libro 4",
+      author: "Autor 4",
+      image: "https://via.placeholder.com/60x90",
+    },
+    {
+      title: "Libro 5",
+      author: "Autor 5",
+      image: "https://via.placeholder.com/60x90",
+    },
+    {
+      title: "Libro 6",
+      author: "Autor 6",
+      image: "https://via.placeholder.com/60x90",
+    },
+    {
+      title: "Libro 7",
+      author: "Autor 7",
+      image: "https://via.placeholder.com/60x90",
+    },
+    {
+      title: "Libro 8",
+      author: "Autor 8",
+      image: "https://via.placeholder.com/60x90",
+    },
+    {
+      title: "Libro 9",
+      author: "Autor 9",
+      image: "https://via.placeholder.com/60x90",
+    },
+    {
+      title: "Libro 10",
+      author: "Autor 9",
+      image: "https://via.placeholder.com/60x90",
+    },
+  ];*/
+  }
 
   const backgroundColorInterpolate = colorAnimation.interpolate({
     inputRange: [0, 1],
@@ -93,34 +201,24 @@ const books = [
 
   return (
     <ScrollView style={styles.scrollContainer}>
+      <View style={styles.header}>
+        <View style={styles.container}>
+          <View style={styles.containeriIcons}>
+            <Image
+              source={{ uri: "https://picsum.photos/40/40" }}
+              style={styles.userImage}
+            />
+
+            <View style={styles.bellIconContainer}>
+              <Ionicons name="notifications-outline" size={24} color="white" />
+              <View style={styles.notificationBadge} />
+            </View>
+          </View>
+        </View>
+        <Text style={styles.headerName}>Hola, Samuel</Text>
+        <Text style={styles.headerText}>Bienvenido {"\n"}otra vez!!!</Text>
+      </View>
       <View style={styles.container}>
-        <View style={styles.welcomeMessageContainer}>
-        <Text style={styles.welcomeTexth}>Hola Samuel!
-    </Text>
-          <Text style={styles.welcomeText}>
-             Que {'\n'}buscas hoy</Text>
-             
-        </View>
-
-        <View style={styles.searchContainer}>
-          <Ionicons name="search-outline" size={24} color="black" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Qué buscas hoy"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
-
-        <View style={styles.gridContainer}>
-          {categories.map((category, index) => (
-            <TouchableOpacity key={index} style={[styles.cardtipo, { backgroundColor: category.color }]}>
-              <Ionicons name={category.icon} size={40} color="gray" style={styles.cardIcon} />
-              <Text style={styles.cardTitle}>{category.title}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
         <View style={styles.tarjetasContainer}>
           <Text style={styles.title}>Libro de la semana</Text>
 
@@ -166,24 +264,83 @@ const books = [
 
           <Text style={styles.texta}>Tambien podria Gustarte</Text>
         </View>
-       
-
-    <View style={styles.container}>
-      
-      {books.map((book, index) => (
-        <TouchableOpacity key={index} style={styles.card}>
-          <Image source={{ uri: book.image }} style={styles.bookImage} />
-          <Text style={styles.bookTitle}>{book.title}</Text>
-          <Text style={styles.bookAuthor}>{book.author}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+        <View style={styles.container}>
+          {books.map((book, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.cardItem}
+              onPress={() => {
+                navigation.navigate("DetallesLibro", {
+                  book: {
+                    ...book,
+                    id: book._id,
+                    categories: book.categories,
+                  },
+                });
+              }}
+            >
+              <Image source={{ uri: book.image }} style={styles.bookCover} />
+              <Text style={styles.bookTitleText}>{book.title}</Text>
+              <Text style={styles.bookAuthorText}>{book.author}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  header: {
+    width: "100%",
+    height: 300,
+    backgroundColor: "#000000",
+    borderBottomRightRadius: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  headerName: {
+    color: "#fff",
+    fontSize: 30,
+    fontWeight: "bold",
+    alignSelf: "flex-start",
+    marginBottom: 5,
+    top: -90,
+  },
+  headerText: {
+    color: "#7a7e7f",
+    fontSize: 25,
+    fontWeight: "bold",
+    textAlign: "left",
+    alignSelf: "flex-start",
+    top: -90,
+  },
+  containeriIcons: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+  },
+
+  userImage: {
+    top: 15,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 260,
+  },
+  bellIconContainer: {
+    position: "relative",
+  },
+  notificationBadge: {
+    position: "absolute",
+    right: -5,
+    top: -5,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "red",
+  },
   scrollContainer: {
     flex: 1,
     backgroundColor: "#fff",
@@ -411,8 +568,39 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     marginTop: 20,
-    marginBottom: 20
-  }
+    marginBottom: 20,
+  },
+  cardItem: {
+    width: (width - 50) / 2,
+    height: 280,
+    backgroundColor: "#f5f5f5",
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: "#aaa",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
+    overflow: "hidden",
+  },
+  bookCover: {
+    width: "95%",
+    height: "80%",
+    position: "absolute",
+    top: 0,
+  },
+  bookTitleText: {
+    marginTop: 225,
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#333",
+    paddingHorizontal: 10,
+  },
+  bookAuthorText: {
+    fontSize: 14,
+    color: "#777",
+    paddingHorizontal: 10,
+  },
 });
 
 export default Principal;

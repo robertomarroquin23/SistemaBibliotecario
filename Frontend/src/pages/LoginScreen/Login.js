@@ -15,29 +15,34 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-    const handleLogin = async () => {
-        try {
-            const response = await axios.post('http://localhost:3000/api/login', {
-                email: email,
-                password: password,
-            });
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+        "http://192.168.1.70:3000/biblioteca/login",
+        {
+          email: email,
+          password: password,
+        }
+      );
 
       // Guardar el token si el login es exitoso
       await AsyncStorage.setItem("token", response.data.token);
 
-            // Navegar a la siguiente pantalla si el login es exitoso
-            navigation.navigate('Home');
+      // Navegar a la siguiente pantalla si el login es exitoso
+      //navigation.navigate("Principal");
+      navigation.navigate('MainTabs'); 
 
-        } catch (error) {
-            // Manejar el error si las credenciales son incorrectas
-            if (error.response && error.response.status === 400) {
-                Alert.alert('Error', 'Credenciales incorrectas');
-            } else {
-                Alert.alert('Error', 'Hubo un problema con el servidor');
-            }
-        }
-    };
-
+    } catch (error) {
+      // Manejar el error si las credenciales son incorrectas
+      if (error.response && error.response.status === 400) {
+        Alert.alert("Error", "Credenciales incorrectas");
+      } else {
+       
+        Alert.alert("Error", "Hubo un problema con el servidor", error);
+        console.error("Error en la petición:", error);
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
