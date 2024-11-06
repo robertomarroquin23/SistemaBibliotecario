@@ -5,7 +5,21 @@ import jwt from "jsonwebtoken"; // Para generar el token JWT
 export class UserController {
   // Registro de usuario
   async register(req, res) {
-    const { username, email, password } = req.body;
+    const {
+      username,
+      email,
+      password,
+      fechaNacimiento,
+      ciudad,
+      carnet,
+      carrera,
+      anioIngreso,
+      facultad,
+      telefono,
+      direccion,
+      pais,
+      identificacion,
+    } = req.body;
 
     try {
       // Verificar si el usuario ya existe
@@ -19,6 +33,16 @@ export class UserController {
         username,
         email,
         password,
+        fechaNacimiento,
+        ciudad,
+        carnet,
+        carrera,
+        anioIngreso,
+        facultad,
+        telefono,
+        direccion,
+        pais,
+        identificacion,
       });
 
       // Hashear la contraseña antes de guardar
@@ -89,6 +113,75 @@ export class UserController {
       res.status(200).json(newUser);
     } catch (error) {
       res.status(500).json({ msg: "Error de servidor", error });
+    }
+  }
+
+  async useredit(req, res) {
+    const {
+      fechaNacimiento,
+      ciudad,
+      carnet,
+      carrera,
+      anioIngreso,
+      facultad,
+      telefono,
+      direccion,
+      pais,
+      identificacion,
+    } = req.body;
+    const id = req.params.id;
+    try {
+      const user = await User.findById(id);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      user.fechaNacimiento = fechaNacimiento || user.fechaNacimiento;
+      user.ciudad = ciudad || user.ciudad;
+      user.carnet = carnet || user.carnet;
+      user.carrera = carrera || user.carrera;
+      user.anioIngreso = anioIngreso || user.anioIngreso;
+      user.facultad = facultad || user.facultad;
+      user.telefono = telefono || user.telefono;
+      user.direccion = direccion || user.direccion;
+      user.pais = pais || user.pais;
+      user.identificacion = identificacion || user.identificacion;
+
+      const updatedUser = await user.save();
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  async deleteUser(req, res) {
+    const id = req.params.id;
+
+    const user = await User.findById(id);
+    if (!user) {
+      throw new Error("El usuario no existe");
+    }
+    try {
+      await User.deleteOne({ _id: id });
+      return res.status(200).json({ message: "User eliminado" });
+    } catch (error) {
+      return res.status(500).json({ error: "Error al eliminar el user" });
+    }
+  }
+
+  async getubyid(req, res) {
+    const { id } = req.params;
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        throw new Error("El usuario no existe");
+      } else {
+        return res.status(200).json(user);
+      }
+    } catch (error) {
+      return res.status(500).json({ error: "Error al buscar el user" });
     }
   }
 }

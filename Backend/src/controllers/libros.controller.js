@@ -79,7 +79,7 @@ export class LibrosController {
   }
 
   async editBooks(req, res) {
-    const _id = req.params._id;
+    const id = req.params.id;
     const {
       title,
       author,
@@ -92,21 +92,21 @@ export class LibrosController {
       stock,
     } = req.body;
 
-    const edition = await Books.findById({ _id });
+    const edition = await Books.findById(id);
 
     try {
-      edition.title = title;
-      edition.author = author;
-      edition.image = image;
-      edition.description = description;
-      edition.isbn = isbn;
-      edition.categories = categories;
-      edition.maturity = edition;
-      edition.previewLink = edition;
-      edition.stock = edition;
-      edition.maturity = maturity;
-      edition.previewLink = previewLink;
-      edition.stock = stock;
+      edition.title = title || edition.title;
+      edition.author = author || edition.author;
+      edition.image = image || edition.image;
+      edition.description = description || edition.description;
+      edition.isbn = isbn || edition.isbn;
+      edition.categories = categories || edition.categories;
+      edition.maturity = maturity || edition.maturity;
+      edition.previewLink = previewLink || edition.previewLink;
+      edition.stock = stock || edition.stock;
+      edition.maturity = maturity || edition.maturity;
+      edition.previewLink = previewLink || edition.previewLink;
+      edition.stock = stock || edition.stock;
       await edition.save();
       res.status(200).json(edition);
     } catch (error) {
@@ -148,14 +148,14 @@ export class LibrosController {
   }
 
   async deletebooks(req, res) {
-    const _id = req.params._id;
+    const id = req.params.id;
 
-    const edition = await Books.findById({ _id });
+    const edition = await Books.findById(id);
     if (!edition) {
       throw new Error("El producto no existe");
     }
     try {
-      await Books.deleteOne({ _id });
+      await Books.deleteOne({ id });
       return res.status(200).json({ message: "Producto eliminado" });
     } catch (error) {
       return res.status(500).json({ error: "Error al eliminar el producto" });

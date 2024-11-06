@@ -16,8 +16,8 @@ router.post("/Reservarlibro", (req, res) =>
 router.post("/VerReservas", (req, res) =>
   ControllerLibros.VerReservas(req, res)
 );
-router.post("/editbooks/:_id", libroscontroller.editBooks);
+router.post("/editbooks/:id", libroscontroller.editBooks);
 router.post("/createbooks", libroscontroller.createbooks);
-router.post("/deletebooks/:_id", libroscontroller.deletebooks);
+router.post("/deletebooks/:id", libroscontroller.deletebooks);
 router.get("/getalllibros", libroscontroller.get);
 export default router;

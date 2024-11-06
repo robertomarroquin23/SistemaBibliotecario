@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
     minLength: 3,
     trim: true,
@@ -11,13 +11,55 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
+  fechaNacimiento: {
+    type: Date,
+    required: true,
+  },
+  ciudad: {
+    type: String,
+    required: true,
+  },
+  carnet: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  carrera: {
+    type: String,
+    required: true,
+  },
+  anioIngreso: {
+    type: Number,
+    required: true,
+  },
+  facultad: {
+    type: String,
+    required: true,
+  },
+  telefono: {
+    type: String,
+    required: true,
+  },
+  direccion: {
+    type: String,
+    required: true,
+  },
+  pais: {
+    type: String,
+    required: true,
+  },
+  identificacion: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 });
 
-const User = mongoose.model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 export default User;
