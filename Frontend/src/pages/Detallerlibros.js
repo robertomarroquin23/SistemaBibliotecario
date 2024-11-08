@@ -26,7 +26,8 @@ const DetallesLibro = ({ route, navigation }) => {
   };
 
   //const API_URL = "http://192.168.1.63:3000/biblioteca/Reservarlibro";
-  const API_URL = "http://192.168.0.15:3000/biblioteca/Reservarlibro";
+  //const API_URL = "http://192.168.0.15:3000/biblioteca/Reservarlibro";
+  const API_URL = "http://localhost:3000/biblioteca/Reservarlibro";
 
   const handleReserve = async () => {
     try {

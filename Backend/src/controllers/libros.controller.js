@@ -45,7 +45,8 @@ export class LibrosController {
         description: item.volumeInfo.description
           ? item.volumeInfo.description
           : "Sin descripcion",
-        isbn: item.volumeInfo.industryIdentifiers[0],
+        //isbn: item.volumeInfo.industryIdentifiers[0],
+        isbn: item.volumeInfo?.industryIdentifiers?.[0] || "",
         categories: item.volumeInfo.categories
           ? item.volumeInfo.categories[0]
           : "Sin categoría",

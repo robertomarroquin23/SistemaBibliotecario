@@ -10,7 +10,7 @@ import Home from "./src/pages/HomeScreen/Home";
 import MisLibros from "./src/pages/Mslibros";
 import DetallesLibro from "./src/pages/Detallerlibros";
 import Perfil from "./src/pages/perfil";
-
+import Devolucion from "./src/pages/Devolucion";
 import Principal from "./src/pages/Principal";
 import Recuperacion from "./src/pages/Recuperacion";
 import Verificacion from "./src/pages/Verificacion";
@@ -34,6 +34,9 @@ const MainTabs = () => {
             iconName = "book";
           }
           if (route.name === "Libros") {
+            iconName = "book";
+          }
+          if (route.name === "Devolucion") {
             iconName = "book";
           }
           if (route.name === "Perfil") {
@@ -84,6 +87,11 @@ const MainTabs = () => {
         component={Perfil}
         options={{ headerShown: false }}
       />
+      <Tab.Screen
+        name="Devolucion"
+        component={Devolucion}
+        options={{ headerShown: false }}
+      />
 
     </Tab.Navigator>
   );
@@ -121,6 +129,11 @@ const App = () => {
         <Stack.Screen
           name="Recuperacion"
           component={Recuperacion}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Devolucion"
+          component={Devolucion}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
