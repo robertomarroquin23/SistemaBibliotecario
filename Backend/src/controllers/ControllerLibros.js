@@ -69,7 +69,7 @@ export class ControllerLibros {
     try {
       const { idAlumno } = req.body;
       //const reservas = await Registro.find({ idAlumno: idAlumno });
-      const reservas = await Registro.find();
+      const reservas = await Registro.find({ estado: "Prestado" });
 
       if (reservas.length === 0) {
         return res.status(404).json({ message: "No se encontraron reservas." });
@@ -84,15 +84,13 @@ export class ControllerLibros {
 
   static async VerTodasReservas(req, res) {
     try {
-      const reservas = await Registro.find();
+      const reservas = await Registro.find({ estado: "Prestado" });
 
       if (reservas.length === 0) {
         return res.status(404).json({ message: "No se encontraron reservas." });
       }
       res.status(200).json(reservas);
-      console.log("Reservas obtenidas correctamente");
     } catch (error) {
-      console.error("Error al obtener reservas:", error);
       res.status(500).json({ message: "Error al obtener las reservas." });
     }
   }
@@ -108,11 +106,10 @@ export class ControllerLibros {
           .status(404)
           .json({ message: "No se encontró el préstamo o el libro." });
       }
-
       await Books.findByIdAndUpdate(libroId, { $inc: { stock: 1 } });
+      await Registro.findByIdAndUpdate(busqueda._id, { estado: "Devuelto" });
       res.status(200).json({ message: "Stock del libro actualizado correctamente." });
     } catch (error) {
-      console.error("Error al obtener el id:", error);
       res.status(500).json({ message: "Error al obtener el id del libro." });
     }
   }

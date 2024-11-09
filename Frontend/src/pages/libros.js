@@ -17,7 +17,7 @@ const { width } = Dimensions.get("window");
 
 const Libros = ({ navigation }) => {
   //const API_URL = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
-  const API_URL = "http://localhost:3000/ObtenerLibros/getlibrosmongo";
+  const API_URL = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]); 
   const [searchTerm, setSearchTerm] = useState("");

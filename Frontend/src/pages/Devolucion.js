@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   StyleSheet,
   View,
@@ -6,7 +7,6 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  Image,
   Alert,
 } from "react-native";
 import axios from "axios";
@@ -14,22 +14,33 @@ import axios from "axios";
 const { width } = Dimensions.get("window");
 
 const Devolucion = () => {
-  const [librosDetalles, setLibrosDetalles] = useState([]);
-  const API_URL = "http://localhost:3000/biblioteca/VerTodasReservas";
-  const API_URL2 = "http://localhost:3000/biblioteca/devolverStock";
+  const [reservaDetalles, setReservasDetalles] = useState([]);
+  const [infoLibros, setInfoLibros] = useState([]);
+  const API_URL = "http://192.168.0.4:3000/biblioteca/VerTodasReservas";
+  const API_URL2 = "http://192.168.0.4:3000/biblioteca/devolverStock";
+  const API_URL3 = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
 
-  const fetchReservas = async () => {
+  const cargarReservas = async () => {
     try {
       const response = await axios.get(API_URL);
-      setLibrosDetalles(response.data);
+      setReservasDetalles(response.data);
     } catch (error) {
-      console.error("Error al obtener reservas:", error);
+      console.error("Error al cargar las reservas:", error);
+    }
+
+    try {
+      const response = await axios.get(API_URL3);
+      setInfoLibros(response.data);
+    } catch (error) {
+      console.error("Error al cargar la info de los libros", error);
     }
   };
 
-  useEffect(() => {
-    fetchReservas();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      cargarReservas();
+    }, [])
+  );
 
   const devolucion = async (codigoPrestamo, libroId) => {
     Alert.alert(
@@ -43,7 +54,12 @@ const Devolucion = () => {
             try {
               await axios.post(API_URL2, { codigoPrestamo, libroId });
               Alert.alert("Éxito", "El libro ha sido devuelto.");
-              fetchReservas();
+
+              setReservasDetalles((prevReservasDetalles) =>
+                prevReservasDetalles.filter(
+                  (reserva) => reserva.codigoPrestamo !== codigoPrestamo
+                )
+              );
             } catch (error) {
               console.error("Error al devolver el libro:", error);
               Alert.alert("Error", "Hubo un problema al devolver el libro.");
@@ -61,29 +77,35 @@ const Devolucion = () => {
       </View>
 
       <View style={styles.tarjetasContainer}>
-        {librosDetalles.length > 0 ? (
-          librosDetalles.map((libro, index) => (
-            <View key={index} style={styles.cardItem}>
-              <Image source={{ uri: libro.image }} style={styles.bookCover} />
-              <View style={styles.bookDetails}>
-                <Text style={styles.bookTitle}>{libro.title}</Text>
-                <Text style={styles.bookAuthor}>Autor: {libro.author}</Text>
-                <Text style={styles.bookUser}>
-                  Reservado por: {libro.usuario}
-                </Text>
+        {reservaDetalles.length > 0 ? (
+          reservaDetalles.map((libro, index) => {
+            // Buscar el libro correspondiente en infoLibros
+            const libroInfo = infoLibros.find((info) => info._id === libro.libroId);
+
+            return (
+              <View key={index} style={styles.cardItem}>
+                <View style={styles.bookDetails}>
+                  <Text style={styles.bookTitle}>Título: {libroInfo?.title || 'Título no disponible'}</Text>
+                  <Text style={styles.bookUser}>
+                    Usuario que lo prestó: {libro.usuario}
+                  </Text>
+                  <Text style={styles.bookDate}>
+                    Fecha de préstamo: {libro.fechaPrestamo}
+                  </Text>
+                </View>
+                <View style={styles.actions}>
+                  <TouchableOpacity
+                    style={styles.returnButton}
+                    onPress={() =>
+                      devolucion(libro.codigoPrestamo, libro.libroId)
+                    }
+                  >
+                    <Text style={styles.returnButtonText}>Devolver</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={styles.actions}>
-                <TouchableOpacity
-                  style={styles.returnButton}
-                  onPress={() =>
-                    devolucion(libro.codigoPrestamo, libro.libroId)
-                  }
-                >
-                  <Text style={styles.returnButtonText}>Devolver</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))
+            );
+          })
         ) : (
           <Text style={styles.noBooksText}>No tienes libros reservados.</Text>
         )}
@@ -111,7 +133,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   cardItem: {
-    flexDirection: "row",
+    flexDirection: "column",
     backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
@@ -122,12 +144,6 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 2,
   },
-  bookCover: {
-    width: 80,
-    height: 110,
-    borderRadius: 8,
-    marginRight: 15,
-  },
   bookDetails: {
     flex: 1,
     justifyContent: "center",
@@ -136,14 +152,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  bookAuthor: {
-    fontSize: 14,
-    color: "#666",
-  },
   bookUser: {
     fontSize: 14,
     color: "#666",
     marginVertical: 5,
+  },
+  bookDate: {
+    fontSize: 14,
+    color: "#666",
   },
   actions: {
     justifyContent: "space-between",
