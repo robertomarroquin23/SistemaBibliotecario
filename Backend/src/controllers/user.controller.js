@@ -6,7 +6,7 @@ export class UserController {
 
   // Registro de usuario
   async register(req, res) {
-    const { username, email, password } = req.body;
+    const { username, email, password, address, phone, personalEmail, birthday } = req.body;
 
     try {
       // Verificar si el usuario ya existe
@@ -20,6 +20,10 @@ export class UserController {
         username,
         email,
         password,
+        address,
+        phone,
+        personalEmail,
+        birthday,
       });
 
       // Hashear la contraseña antes de guardar
@@ -63,7 +67,7 @@ export class UserController {
       // Generar el token JWT
       const token = jwt.sign(payload, "secret_key", { expiresIn: "1h" });
 
-      res.status(200).json({ token });
+      res.status(200).json({ token, "tokenId": payload.user.id });
     } catch (error) {
       res.status(500).json({ msg: "Error de servidor", error });
     }
