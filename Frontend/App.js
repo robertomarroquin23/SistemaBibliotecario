@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Login from './src/pages/LoginScreen/Login';
 import Home from './src/pages/HomeScreen/Home';
+import Register from './src/pages/RegisterScreen/Register';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,10 @@ const App = () => {
         <Stack.Screen
           name="Home"
           component={Home}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
         />
       </Stack.Navigator>
     </NavigationContainer>
