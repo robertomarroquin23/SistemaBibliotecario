@@ -34,6 +34,11 @@ app.post('/api/login', (req, res) => {
   res.json({ message: 'Inicio de sesión exitoso', token: 'token_jwt' });
 });
 
+app.post('/api/register', (req, res) => {
+  // Tu lógica de login
+  res.json({ message: 'Inicio de sesión exitoso', token: 'token_jwt', });
+});
+
 
 
 
