@@ -18,6 +18,8 @@ const LoginScreen = ({ navigation }) => {
             // Guardar el token si el login es exitoso
             await AsyncStorage.setItem('token', response.data.token);
 
+            //guardar el id para recuperar datos del usuario
+            await AsyncStorage.setItem('user', response.data.tokenId);
             // Navegar a la siguiente pantalla si el login es exitoso
             navigation.navigate('Home');
 
@@ -51,7 +53,11 @@ const LoginScreen = ({ navigation }) => {
                     secureTextEntry
                 />
                 <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                    <Text style={styles.buttonText}>Login</Text>
+                    <Text style={styles.buttonText}>Iniciar sesion</Text>
+                </TouchableOpacity>
+                {/* Botón para navegar a la pantalla de registro */}
+                <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
+                    <Text style={styles.registerButtonText}>Registrarse</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -98,6 +104,17 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
+    },
+    registerButton: {
+        marginTop: 15,
+        paddingVertical: 15,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    registerButtonText: {
+        color: '#007BFF',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 
 });
