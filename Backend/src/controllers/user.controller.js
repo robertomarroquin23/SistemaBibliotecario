@@ -1,6 +1,9 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs"; // Para hashear la contraseña
 import jwt from "jsonwebtoken"; // Para generar el token JWT
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config()
 
 export class UserController {
   // Registro de usuario
@@ -190,6 +193,55 @@ export class UserController {
       }
     } catch (error) {
       return res.status(500).json({ error: "Error al buscar el user" });
+    }
+  }
+
+  async sendEmail(req, res) {
+    const USER = process.env.USER;
+    const PASS = process.env.PASS;
+  
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: USER,
+        pass: PASS,
+      },
+    });
+   
+    const { email, code } = req.body;
+    try {
+      await transporter.sendMail({
+        from: USER,
+        to: email,
+        subject: "Código de verificación",
+        text: `Tu código de verificación es: ${code}`,
+      });
+      res.status(200).json({ message: "Correo enviado correctamente" });
+    } catch (error) {
+      console.error("Error al enviar el correo:", error);
+      res.status(500).json({ message: "Error al enviar el correo", error });
+    }
+  }  
+
+  async updatePass (req, res){
+    const { password } = req.body
+    const id = req.params.id;
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+
+      user.password = password || user.password
+
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+
+      const passwordUpdate = await user.save();
+      res.status(200).json(passwordUpdate);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Server error" });
     }
   }
 }

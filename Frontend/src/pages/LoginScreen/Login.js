@@ -14,12 +14,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
+  URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
+  //URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
 
+  const Recuperacion = () => {
+    navigation.navigate('Verificacion');
+  }
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://192.168.1.70:3000/biblioteca/login", {
+      const response = await axios.post("http://192.168.0.4:3000/biblioteca/login", {
         email: email,
         password: password,
       });
@@ -79,6 +83,8 @@ const LoginScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+
+        <Text style={styles.forgotPassword} onPress={Recuperacion}>¿Olvidaste tu contraseña?</Text>
       </View>
     </View>
   );
@@ -124,6 +130,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  forgotPassword: {
+    color: '#ff4d4d',
+    marginTop: 15,
+    fontSize: 14,
   },
 });
 

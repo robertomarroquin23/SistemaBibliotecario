@@ -16,9 +16,12 @@ const { width } = Dimensions.get("window");
 const Devolucion = () => {
   const [reservaDetalles, setReservasDetalles] = useState([]);
   const [infoLibros, setInfoLibros] = useState([]);
-  const API_URL = "http://192.168.1.70:3000/biblioteca/VerTodasReservas";
-  const API_URL2 = "http://192.168.1.70:3000/biblioteca/devolverStock";
-  const API_URL3 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
+  const API_URL = "http://192.168.0.4:3000/biblioteca/VerTodasReservas";
+  const API_URL2 = "http://192.168.0.4:3000/biblioteca/devolverStock";
+  const API_URL3 = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
+  //const API_URL = "http://192.168.1.70:3000/biblioteca/VerTodasReservas";
+  //const API_URL2 = "http://192.168.1.70:3000/biblioteca/devolverStock";
+  //const API_URL3 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
 
   const cargarReservas = async () => {
     try {
@@ -79,7 +82,6 @@ const Devolucion = () => {
       <View style={styles.tarjetasContainer}>
         {reservaDetalles.length > 0 ? (
           reservaDetalles.map((libro, index) => {
-            // Buscar el libro correspondiente en infoLibros
             const libroInfo = infoLibros.find((info) => info._id === libro.libroId);
 
             return (
