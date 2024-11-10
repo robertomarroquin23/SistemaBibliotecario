@@ -11,15 +11,16 @@ import {
 } from "react-native";
 import axios from "axios";
 import { Circle } from "react-native-progress";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
 const MisLibros = ({ navigation }) => {
-  const API_URL = "http://192.168.0.4:3000/biblioteca/VerReservas";
-  const API_URL2 = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
-  //const API_URL = "http://192.168.1.70:3000/biblioteca/VerReservas";
-  //const API_URL2 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
+  const API_URL = "http://192.168.0.8:3000/biblioteca/VerReservas";
+  const API_URL2 = "http://192.168.0.8:3000/ObtenerLibros/getlibrosmongo";
+
+  ///const API_URL = "http://192.168.0.15:3000/biblioteca/VerReservas";
+  //const API_URL2 = "http://192.168.0.15:3000/ObtenerLibros/getlibrosmongo";
 
   const [librosDetalles, setLibrosDetalles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,19 +34,19 @@ const MisLibros = ({ navigation }) => {
         userId: jsonUSER.identificacion,
       });
       const reservas = responseReservas.data;
-  
+
       const librosIds = reservas
         .filter((reserva) => reserva.idAlumno === jsonUSER.identificacion)
         .map((reserva) => reserva.libroId);
-  
+
       if (librosIds.length > 0) {
         const responseLibros = await axios.get(API_URL2);
         const todosLibros = responseLibros.data;
-  
+
         const librosFiltrados = todosLibros.filter((libro) =>
           librosIds.includes(libro._id)
         );
-  
+
         const librosConReservas = librosFiltrados.map((libro) => {
           const reserva = reservas.find(
             (res) =>
@@ -57,15 +58,15 @@ const MisLibros = ({ navigation }) => {
             fechaDevolucion: reserva ? reserva.fechaDevolucion : null,
           };
         });
-  
+
         setLibrosDetalles(librosConReservas);
       } else {
-        setLibrosDetalles([]);  
+        setLibrosDetalles([]);
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.log("El recurso no fue encontrado.");
-        setLibrosDetalles([]);  // vacio
+        setLibrosDetalles([]); // vacio
       } else {
         console.error("Error al cargar las reservas:", error);
       }
@@ -73,23 +74,21 @@ const MisLibros = ({ navigation }) => {
       setLoading(false);
     }
   };
-  
-  
-  
+
   const getUserData = async () => {
     try {
       const userData = await AsyncStorage.getItem("user");
       if (userData) {
         const jsonUSER = JSON.parse(userData);
         setJsonUser(jsonUSER);
-        await fetchData(jsonUSER); 
+        await fetchData(jsonUSER);
       } else {
         console.log("No se encontró el usuario en AsyncStorage");
-        setLibrosDetalles([]);  
+        setLibrosDetalles([]);
       }
     } catch (error) {
       console.error("Error al obtener los datos del usuario:", error);
-      setLibrosDetalles([]); 
+      setLibrosDetalles([]);
     }
   };
   const onRefresh = useCallback(() => {

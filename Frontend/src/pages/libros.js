@@ -16,13 +16,15 @@ import { Ionicons } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 
 const Libros = ({ navigation }) => {
-  //const API_URL = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
-  const API_URL = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
+  const API_URL = "http://192.168.0.8:3000/ObtenerLibros/getlibrosmongo";
+
   const [books, setBooks] = useState([]);
-  const [filteredBooks, setFilteredBooks] = useState([]); 
+  const [filteredBooks, setFilteredBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [categories, setCategories] = useState(new Set(["Todos", "Ficción", "No Ficción", "Infantil", "Misterio"]));
+  const [categories, setCategories] = useState(
+    new Set(["Todos", "Ficción", "No Ficción", "Infantil", "Misterio"])
+  );
   const [fadeAnim] = useState(new Animated.Value(0));
 
   useEffect(() => {
@@ -31,7 +33,7 @@ const Libros = ({ navigation }) => {
         const response = await axios.get(API_URL);
         const fetchedBooks = response.data;
         setBooks(fetchedBooks);
-        setFilteredBooks(fetchedBooks); 
+        setFilteredBooks(fetchedBooks);
 
         const uniqueCategories = new Set(["Todos"]);
         fetchedBooks.forEach((book) => {
@@ -59,15 +61,15 @@ const Libros = ({ navigation }) => {
       const filter = books.filter((book) =>
         book.title.toLowerCase().includes(text.toLowerCase())
       );
-      setFilteredBooks(filter); 
+      setFilteredBooks(filter);
     } else {
-      setFilteredBooks(books); 
+      setFilteredBooks(books);
     }
   };
 
   const filterBooksByCategory = (category) => {
     if (category === "Todos") {
-      setFilteredBooks(books); 
+      setFilteredBooks(books);
     } else {
       const filtered = books.filter((book) => book.categories === category);
       setFilteredBooks(filtered);
@@ -75,9 +77,10 @@ const Libros = ({ navigation }) => {
   };
 
   return (
-    <Animated.ScrollView style={[styles.scrollContainer, { opacity: fadeAnim }]}>
+    <Animated.ScrollView
+      style={[styles.scrollContainer, { opacity: fadeAnim }]}
+    >
       <View style={styles.header}>
-        
         <Text style={styles.headerName}>Hola, Samuel</Text>
         <Text style={styles.headerText}>The best{"\n"}books for you!!!</Text>
         <View style={styles.searchContainer}>
@@ -90,15 +93,23 @@ const Libros = ({ navigation }) => {
           <TextInput
             style={styles.searchInput}
             placeholder="Qué buscas hoy"
-            onChangeText={filterBooks} 
+            onChangeText={filterBooks}
             value={searchTerm}
           />
         </View>
       </View>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesContainer}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.categoriesContainer}
+      >
         {[...categories].map((category, index) => (
-          <TouchableOpacity key={index} style={styles.categoryButton} onPress={() => filterBooksByCategory(category)}>
+          <TouchableOpacity
+            key={index}
+            style={styles.categoryButton}
+            onPress={() => filterBooksByCategory(category)}
+          >
             <Text style={styles.categoryText}>{category}</Text>
           </TouchableOpacity>
         ))}
@@ -113,7 +124,14 @@ const Libros = ({ navigation }) => {
             style={[
               styles.cardItem,
               {
-                transform: [{ translateY: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }) }],
+                transform: [
+                  {
+                    translateY: fadeAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [20, 0],
+                    }),
+                  },
+                ],
               },
             ]}
           >

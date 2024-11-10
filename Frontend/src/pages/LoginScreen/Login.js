@@ -14,25 +14,28 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
-//URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
+  URL_GETUSER = "http://192.168.0.4:3000/biblioteca/getbyid";
+  //URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
 
   const Recuperacion = () => {
-    navigation.navigate('Verificacion');
-  }
+    navigation.navigate("Verificacion");
+  };
 
   const handleLogin = async () => {
     try {
       //const response = await axios.post("http://192.168.1.70:3000/biblioteca/login", {
-      const response = await axios.post("http://192.168.0.4:3000/biblioteca/login", {
-        email: email,
-        password: password,
-      });
-  
+      const response = await axios.post(
+        "http://192.168.0.8:3000/biblioteca/login",
+        {
+          email: email,
+          password: password,
+        }
+      );
+
       if (response.data.id) {
         const id = response.data.id;
         console.log(id);
-  
+
         try {
           const userResponse = await axios.get(`${URL_GETUSER}/${id}`);
           if (userResponse.status === 200) {
@@ -40,7 +43,7 @@ URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
             await AsyncStorage.setItem("user", JSON.stringify(userData));
             const user = JSON.parse(await AsyncStorage.getItem("user"));
             console.log(user.roll);
-  
+
             navigation.navigate("MainTabs", {
               hideButton: user.roll === 1,
             });
@@ -51,8 +54,12 @@ URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
           console.error("Error en la petición:", error);
         }
       }
-  
+
       await AsyncStorage.setItem("token", response.data.token);
+
+      // Navegar a la siguiente pantalla si el login es exitoso
+      //navigation.navigate("Principal");
+      navigation.navigate("MainTabs");
     } catch (error) {
       if (error.response && error.response.status === 400) {
         Alert.alert("Error", "Credenciales incorrectas");
@@ -62,7 +69,7 @@ URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
       }
     }
   };
-    
+
   return (
     <View style={styles.container}>
       <View style={styles.form}>
@@ -85,7 +92,9 @@ URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
-        <Text style={styles.forgotPassword} onPress={Recuperacion}>¿Olvidaste tu contraseña?</Text>
+        <Text style={styles.forgotPassword} onPress={Recuperacion}>
+          ¿Olvidaste tu contraseña?
+        </Text>
       </View>
     </View>
   );
@@ -133,7 +142,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   forgotPassword: {
-    color: '#ff4d4d',
+    color: "#ff4d4d",
     marginTop: 15,
     fontSize: 14,
   },
