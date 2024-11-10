@@ -19,6 +19,7 @@ export class UserController {
       direccion,
       pais,
       identificacion,
+      roll,
     } = req.body;
 
     try {
@@ -43,6 +44,7 @@ export class UserController {
         direccion,
         pais,
         identificacion,
+        roll,
       });
 
       // Hashear la contraseña antes de guardar
@@ -86,7 +88,10 @@ export class UserController {
       // Generar el token JWT
       const token = jwt.sign(payload, "secret_key", { expiresIn: "1h" });
 
-      res.status(200).json({ token });
+      res.status(200).json({ token, "id":payload.user.id });
+      var id= payload.user.id;
+      console.log("--------------------------------------------------");
+      console.log(id);
     } catch (error) {
       res.status(500).json({ msg: "Error de servidor", error });
     }
@@ -128,6 +133,7 @@ export class UserController {
       direccion,
       pais,
       identificacion,
+      roll
     } = req.body;
     const id = req.params.id;
     try {
@@ -147,6 +153,8 @@ export class UserController {
       user.direccion = direccion || user.direccion;
       user.pais = pais || user.pais;
       user.identificacion = identificacion || user.identificacion;
+      user.roll = roll || user.roll;
+
 
       const updatedUser = await user.save();
       res.status(200).json(updatedUser);

@@ -10,12 +10,15 @@ import {
 } from "react-native";
 import axios from "axios";
 import { Circle } from "react-native-progress";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const { width } = Dimensions.get("window");
+
+const { width } = Dimensions.get("window"); 
+
 
 const MisLibros = ({ navigation }) => {
-  const API_URL = "http://192.168.0.4:3000/biblioteca/VerReservas";
-  const API_URL2 = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
+  const API_URL = "http://192.168.1.70:3000/biblioteca/VerReservas";
+  const API_URL2 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
   // API_URL = "http://192.168.1.70:3000/biblioteca/VerReservas";
   //const API_URL2 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
   ///const API_URL = "http://192.168.0.15:3000/biblioteca/VerReservas";
@@ -23,51 +26,69 @@ const MisLibros = ({ navigation }) => {
 
   const [librosDetalles, setLibrosDetalles] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [jsonUSER, setJsonUser] = useState(null); 
   useEffect(() => {
-    const fetchData = async () => {
+    const getUserData = async () => {
       try {
+        const userData = await AsyncStorage.getItem("user");
+  
+        if (userData) {
+          const jsonUSER = JSON.parse(userData);
+          setJsonUser(jsonUSER);
+          console.log("Datos del usuario:", jsonUSER);
+          fetchData(jsonUSER); 
+        } else {
+          console.log("No se encontró el usuario en AsyncStorage");
+        }
+      } catch (error) {
+        console.error("Error al obtener los datos del usuario:", error);
+      }
+    };
+  
+    const fetchData = async (jsonUSER) => {
+      try {
+        setLoading(true); 
         const responseReservas = await axios.post(API_URL, {
-          userId: "183021",
+          userId: jsonUSER.identificacion,
         });
         const reservas = responseReservas.data;
-
+  
         const librosIds = reservas
-          .filter((reserva) => reserva.idAlumno === "183021")
+          .filter((reserva) => reserva.idAlumno === jsonUSER.identificacion)
           .map((reserva) => reserva.libroId);
-
+  
         if (librosIds.length > 0) {
           const responseLibros = await axios.get(API_URL2);
           const todosLibros = responseLibros.data;
-
+  
           const librosFiltrados = todosLibros.filter((libro) =>
             librosIds.includes(libro._id)
           );
-
+  
           const librosConReservas = librosFiltrados.map((libro) => {
             const reserva = reservas.find(
-              (res) => res.libroId === libro._id && res.idAlumno === "183021"
+              (res) => res.libroId === libro._id && res.idAlumno === jsonUSER.identificacion
             );
             return {
               ...libro,
               fechaDevolucion: reserva ? reserva.fechaDevolucion : null,
             };
           });
-
+  
           setLibrosDetalles(librosConReservas);
         } else {
           setLibrosDetalles([]);
         }
       } catch (error) {
-        console.error("Error en la petición:", error);
+        console.error("Error al cargar las reservas:", error);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchData();
-  }, []);
-
+  
+    getUserData();
+  }, []);  
+  
   const calcularTiempoRestante = (fechaDevolucion) => {
     if (!fechaDevolucion) return 0;
     const tiempoRestante = new Date(fechaDevolucion) - new Date();
@@ -77,7 +98,13 @@ const MisLibros = ({ navigation }) => {
     );
     return diasRestantes;
   };
-
+  if (!jsonUSER) {
+    return (
+      <View>
+        <Text>Cargando datos del usuario...</Text>
+      </View>
+    );
+  }
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -197,7 +224,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 3,
-    alignSelf: "center", // Centra las tarjetas en la pantalla
+    alignSelf: "center", 
   },
   bookContainer: {
     flex: 1,

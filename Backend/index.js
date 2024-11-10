@@ -59,7 +59,8 @@ app.use("/biblioteca/devolverStock", librosRoutes);
 // Ejemplo de ruta
 app.post("/api/login", (req, res) => {
   // Tu lógica de login
-  res.json({ message: "Inicio de sesión exitoso", token: "token_jwt" });
+  res.json({ message: 'Inicio de sesión exitoso', token: 'token_jwt', });
+  
 });
 
 app.listen(port, () => console.log(`app listening on port ${port}`));

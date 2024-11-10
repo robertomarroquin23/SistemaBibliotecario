@@ -12,6 +12,7 @@ import Modal from "react-native-modal";
 import axios from "axios";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DetallesLibro = ({ route, navigation }) => {
   const { book } = route.params;
@@ -20,6 +21,7 @@ const DetallesLibro = ({ route, navigation }) => {
   const [isTicketModalVisible, setTicketModalVisible] = useState(false);
   const [ticketData, setTicketData] = useState(null);
   const [showDownloadButton, setShowDownloadButton] = useState(false);
+  const [jsonUSER, setJsonUser] = useState(null); 
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -27,7 +29,7 @@ const DetallesLibro = ({ route, navigation }) => {
 
   //const API_URL = "http://192.168.1.63:3000/biblioteca/Reservarlibro";
   //const API_URL = "http://192.168.0.15:3000/biblioteca/Reservarlibro";
-  const API_URL = "http://192.168.0.4:3000/biblioteca/Reservarlibro";
+  const API_URL = "http://192.168.1.70:3000/biblioteca/Reservarlibro";
 
   const handleReserve = async () => {
     try {
@@ -47,10 +49,25 @@ const DetallesLibro = ({ route, navigation }) => {
       toggleModal();
     }
   };
+  const getUserData = async () => {
+    try {
+      const userData = await AsyncStorage.getItem("user");
+
+      if (userData) {
+        const jsonUSER = JSON.parse(userData);
+        setJsonUser(jsonUSER); 
+        console.log("Datos del usuario:", jsonUSER);
+      } else {
+        console.log("No se encontró el usuario en AsyncStorage");
+      }
+    } catch (error) {
+      console.error("Error al obtener los datos del usuario:", error);
+    }
+  };
+  getUserData();
 
   const handleDownloadPDF = async () => {
-    const htmlContent = `
-<html>
+    const htmlContent = `<html>
 <head>
   <style>
     body {
@@ -127,11 +144,11 @@ const DetallesLibro = ({ route, navigation }) => {
       </tr>
       <tr>
         <td>ID de Alumno</td>
-        <td>${ticketData?.registro.idAlumno}</td>
+        <td>${jsonUSER?.identificacion}</td> <!-- Usar datos del localStorage -->
       </tr>
       <tr>
         <td>Usuario</td>
-        <td>Juan Pérez</td>
+        <td>${jsonUSER?.username}</td> <!-- Usar datos del localStorage -->
       </tr>
     </table>
     <div class="footer">
@@ -144,7 +161,7 @@ const DetallesLibro = ({ route, navigation }) => {
     </div>
   </div>
 </body>
-</html>
+</html> 
     `;
 
     try {

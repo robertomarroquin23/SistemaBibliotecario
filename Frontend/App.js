@@ -1,12 +1,11 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
+import React, { useState, useEffect,View, Text } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { NavigationContainer } from "@react-navigation/native"; 
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; 
+import { createStackNavigator } from "@react-navigation/stack"; 
+import AsyncStorage from "@react-native-async-storage/async-storage"; 
 import Login from "./src/pages/LoginScreen/Login";
 import Home from "./src/pages/HomeScreen/Home";
-
-//import Login from "./src/pages/Login";
 import MisLibros from "./src/pages/Mslibros";
 import DetallesLibro from "./src/pages/Detallerlibros";
 import Perfil from "./src/pages/perfil";
@@ -14,13 +13,20 @@ import Devolucion from "./src/pages/Devolucion";
 import Principal from "./src/pages/Principal";
 import Recuperacion from "./src/pages/Recuperacion";
 import Verificacion from "./src/pages/Verificacion";
-
 import Libros from "./src/pages/libros";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const MainTabs = () => {
+const MainTabs = ({ route }) => {
+  const [isButtonVisible, setIsButtonVisible] = useState(true);
+
+  useEffect(() => {
+    if (route.params?.hideButton) {
+      setIsButtonVisible(false);  
+    }
+  }, [route.params?.hideButton]);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -34,18 +40,16 @@ const MainTabs = () => {
             iconName = "book";
           }
           if (route.name === "Libros") {
-            iconName = "book";
-          }
-          if (route.name === "Devolucion") {
-            iconName = "book";
+            iconName = "book-open";
           }
           if (route.name === "Perfil") {
-            iconName = "book";
+            iconName = "account";
+          }
+          if (route.name === "Devolucion") {
+            iconName = "refresh";
           }
 
-          return (
-            <MaterialCommunityIcons name={iconName} size={size} color={color} />
-          );
+          return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
         },
         tabBarShowLabel: false,
         tabBarStyle: {
@@ -82,17 +86,23 @@ const MainTabs = () => {
         component={Libros}
         options={{ headerShown: false }}
       />
+      {isButtonVisible && (
         <Tab.Screen
+          name="Devolucion"
+          component={Devolucion}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="refresh" size={size} color={color} />
+            ),
+            headerShown: false,
+          }}
+        />
+      )}
+      <Tab.Screen
         name="Perfil"
         component={Perfil}
         options={{ headerShown: false }}
       />
-      <Tab.Screen
-        name="Devolucion"
-        component={Devolucion}
-        options={{ headerShown: false }}
-      />
-
     </Tab.Navigator>
   );
 };
@@ -129,11 +139,6 @@ const App = () => {
         <Stack.Screen
           name="Recuperacion"
           component={Recuperacion}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Devolucion"
-          component={Devolucion}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

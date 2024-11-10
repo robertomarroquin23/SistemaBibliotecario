@@ -59,6 +59,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  ///1 pa estudiante 2 pa profesor o admin 
+  roll: {
+    type: Number,
+    
+      enum: [1, 2], 
+    
+    
+  },
 });
 
 const User = mongoose.model("User", userSchema);
