@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,10 +5,13 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Modal from "react-native-modal";
 import axios from "axios";
+import React, { useState, useEffect } from "react";
+
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,14 +29,40 @@ const DetallesLibro = ({ route, navigation }) => {
     setModalVisible(!isModalVisible);
   };
 
-  //const API_URL = "http://192.168.1.63:3000/biblioteca/Reservarlibro";
-  //const API_URL = "http://192.168.0.15:3000/biblioteca/Reservarlibro";
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const userData = await AsyncStorage.getItem("user");
+        if (userData) {
+          const parsedData = JSON.parse(userData);
+          setJsonUser(parsedData); 
+          console.log("Datos del usuario:", parsedData);
+        } else {
+          console.log("No se encontró el usuario en AsyncStorage");
+        }
+      } catch (error) {
+        console.error("Error al obtener los datos del usuario:", error);
+      }
+    };
+
+    getUserData();
+  }, []);
+
   const API_URL = "http://192.168.1.70:3000/biblioteca/Reservarlibro";
 
   const handleReserve = async () => {
+    if (!jsonUSER || !jsonUSER.identificacion) {
+      console.error("No se encontraron datos de usuario válidos para reservar");
+      return;
+    }
+    
     try {
       const response = await axios.post(API_URL, {
         bookId: book.id,
+        identificacion: jsonUSER.identificacion,
+        nombre: jsonUSER.username,
+      //  apellidos: jsonUSER.apellidos || "",
+        
       });
 
       if (response.status === 200) {
@@ -49,22 +77,6 @@ const DetallesLibro = ({ route, navigation }) => {
       toggleModal();
     }
   };
-  const getUserData = async () => {
-    try {
-      const userData = await AsyncStorage.getItem("user");
-
-      if (userData) {
-        const jsonUSER = JSON.parse(userData);
-        setJsonUser(jsonUSER); 
-        console.log("Datos del usuario:", jsonUSER);
-      } else {
-        console.log("No se encontró el usuario en AsyncStorage");
-      }
-    } catch (error) {
-      console.error("Error al obtener los datos del usuario:", error);
-    }
-  };
-  getUserData();
 
   const handleDownloadPDF = async () => {
     const htmlContent = `<html>

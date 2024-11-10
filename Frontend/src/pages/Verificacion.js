@@ -11,7 +11,9 @@ const Verificacion = () => {
   const [email, setEmail] = useState("");
   const [enteredCode, setEnteredCode] = useState("");
   const navigation = useNavigation();
-  URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
+//  URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
+URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
+
 
   const generateVerificationCode = async () => {
     const code = Math.floor(1000 + Math.random() * 9000);

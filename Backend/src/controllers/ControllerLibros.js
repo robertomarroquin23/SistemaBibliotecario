@@ -23,9 +23,16 @@ export class ControllerLibros {
   static async Reservarlibro(req, res) {
     try {
       const { bookId } = req.body;
-      const idAlumno = "183021";
+      const { identificacion } = req.body;
+      const { nombre } = req.body;
+      const { apellidos } = req.body;
+
+      
+
+
+     // const idAlumno = "183021";
       console.log("----------------------------------");
-      console.log(bookId, idAlumno);
+      console.log(bookId, identificacion);
 
       const libro = await Books.findById(bookId);
 
@@ -44,10 +51,10 @@ export class ControllerLibros {
       console.log("Libro reservado");
 
       const nuevoRegistro = new Registro({
-        nombre: "Juan",
-        apellido: "Pérez",
+        nombre: nombre,
+        apellido: apellidos,
         libroId: libro._id,
-        idAlumno: idAlumno,
+        idAlumno: identificacion,
         fechaDevolucion: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
       });
 

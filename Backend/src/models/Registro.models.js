@@ -14,10 +14,7 @@ const registroSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    apellido: {
-        type: String,
-        required: true,
-    },
+   
     libroId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "books",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -7,104 +7,112 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  RefreshControl,
 } from "react-native";
 import axios from "axios";
 import { Circle } from "react-native-progress";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-const { width } = Dimensions.get("window"); 
-
+const { width } = Dimensions.get("window");
 
 const MisLibros = ({ navigation }) => {
-  const API_URL = "http://192.168.0.4:3000/biblioteca/VerReservas";
-  const API_URL2 = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
-  //const API_URL = "http://192.168.1.70:3000/biblioteca/VerReservas";
-  //const API_URL2 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
-  //const API_URL = "http://192.168.0.15:3000/biblioteca/VerReservas";
-  //const API_URL2 = "http://192.168.0.15:3000/ObtenerLibros/getlibrosmongo";X
+  const API_URL = "http://192.168.1.70:3000/biblioteca/VerReservas";
+  const API_URL2 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
 
   const [librosDetalles, setLibrosDetalles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [jsonUSER, setJsonUser] = useState(null); 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const userData = await AsyncStorage.getItem("user");
+  const [jsonUSER, setJsonUser] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = async (jsonUSER) => {
+    try {
+      setLoading(true);
+      const responseReservas = await axios.post(API_URL, {
+        userId: jsonUSER.identificacion,
+      });
+      const reservas = responseReservas.data;
   
-        if (userData) {
-          const jsonUSER = JSON.parse(userData);
-          setJsonUser(jsonUSER);
-          console.log("Datos del usuario:", jsonUSER);
-          fetchData(jsonUSER); 
-        } else {
-          console.log("No se encontró el usuario en AsyncStorage");
-        }
-      } catch (error) {
-        console.error("Error al obtener los datos del usuario:", error);
-      }
-    };
+      const librosIds = reservas
+        .filter((reserva) => reserva.idAlumno === jsonUSER.identificacion)
+        .map((reserva) => reserva.libroId);
   
-    const fetchData = async (jsonUSER) => {
-      try {
-        setLoading(true); 
-        const responseReservas = await axios.post(API_URL, {
-          userId: jsonUSER.identificacion,
-        });
-        const reservas = responseReservas.data;
+      if (librosIds.length > 0) {
+        const responseLibros = await axios.get(API_URL2);
+        const todosLibros = responseLibros.data;
   
-        const librosIds = reservas
-          .filter((reserva) => reserva.idAlumno === jsonUSER.identificacion)
-          .map((reserva) => reserva.libroId);
+        const librosFiltrados = todosLibros.filter((libro) =>
+          librosIds.includes(libro._id)
+        );
   
-        if (librosIds.length > 0) {
-          const responseLibros = await axios.get(API_URL2);
-          const todosLibros = responseLibros.data;
-  
-          const librosFiltrados = todosLibros.filter((libro) =>
-            librosIds.includes(libro._id)
+        const librosConReservas = librosFiltrados.map((libro) => {
+          const reserva = reservas.find(
+            (res) =>
+              res.libroId === libro._id &&
+              res.idAlumno === jsonUSER.identificacion
           );
+          return {
+            ...libro,
+            fechaDevolucion: reserva ? reserva.fechaDevolucion : null,
+          };
+        });
   
-          const librosConReservas = librosFiltrados.map((libro) => {
-            const reserva = reservas.find(
-              (res) => res.libroId === libro._id && res.idAlumno === jsonUSER.identificacion
-            );
-            return {
-              ...libro,
-              fechaDevolucion: reserva ? reserva.fechaDevolucion : null,
-            };
-          });
-  
-          setLibrosDetalles(librosConReservas);
-        } else {
-          setLibrosDetalles([]);
-        }
-      } catch (error) {
-        console.error("Error al cargar las reservas:", error);
-      } finally {
-        setLoading(false);
+        setLibrosDetalles(librosConReservas);
+      } else {
+        setLibrosDetalles([]);  
       }
-    };
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.log("El recurso no fue encontrado.");
+        setLibrosDetalles([]);  // vacio
+      } else {
+        console.error("Error al cargar las reservas:", error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   
+  
+  
+  const getUserData = async () => {
+    try {
+      const userData = await AsyncStorage.getItem("user");
+      if (userData) {
+        const jsonUSER = JSON.parse(userData);
+        setJsonUser(jsonUSER);
+        await fetchData(jsonUSER); 
+      } else {
+        console.log("No se encontró el usuario en AsyncStorage");
+        setLibrosDetalles([]);  
+      }
+    } catch (error) {
+      console.error("Error al obtener los datos del usuario:", error);
+      setLibrosDetalles([]); 
+    }
+  };
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getUserData().finally(() => setRefreshing(false));
+  }, []);
+
+  useEffect(() => {
     getUserData();
-  }, []);  
-  
+  }, []);
+
   const calcularTiempoRestante = (fechaDevolucion) => {
     if (!fechaDevolucion) return 0;
     const tiempoRestante = new Date(fechaDevolucion) - new Date();
-    const diasRestantes = Math.max(
-      0,
-      Math.ceil(tiempoRestante / (1000 * 60 * 60 * 24))
-    );
-    return diasRestantes;
+    return Math.max(0, Math.ceil(tiempoRestante / (1000 * 60 * 60 * 24)));
   };
+
   if (!jsonUSER) {
     return (
-      <View>
-        <Text>Cargando datos del usuario...</Text>
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Cargando datos del usuario...</Text>
       </View>
     );
   }
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -113,18 +121,13 @@ const MisLibros = ({ navigation }) => {
     );
   }
 
-  // const calcularTiempoRestante = (fechaDevolucion) => {
-  //   if (!fechaDevolucion) return 0;
-  //   const tiempoRestante = new Date(fechaDevolucion) - new Date();
-  //   const diasRestantes = Math.max(
-  //     0,
-  //     Math.ceil(tiempoRestante / (1000 * 60 * 60 * 24))
-  //   );
-  //   return diasRestantes;
-  // };
-
   return (
-    <ScrollView style={styles.scrollContainer}>
+    <ScrollView
+      style={styles.scrollContainer}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.messageContainer}>
         <Text style={styles.messageText}>
           Esta es tu lista de libros reservados
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 3,
-    alignSelf: "center", 
+    alignSelf: "center",
   },
   bookContainer: {
     flex: 1,

@@ -10,6 +10,7 @@ export class UserController {
   async register(req, res) {
     const {
       username,
+     // apellido,
       email,
       password,
       fechaNacimiento,
@@ -35,6 +36,7 @@ export class UserController {
       // Crear un nuevo usuario
       const newUser = new User({
         username,
+       // apellido,
         email,
         password,
         fechaNacimiento,
