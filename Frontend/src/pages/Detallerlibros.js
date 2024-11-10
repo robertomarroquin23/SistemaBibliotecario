@@ -220,13 +220,7 @@ const DetallesLibro = ({ route, navigation }) => {
               <Text style={styles.buttonText}>Reservar</Text>
             </TouchableOpacity>
           )}
-        </View>
-      </View>
-
-      <Text style={styles.descriptionTitle}>Descripción</Text>
-      <Text style={styles.description}>{book.description}</Text>
-
-      {showDownloadButton && (
+          {showDownloadButton && (
         <TouchableOpacity
           style={styles.downloadButton}
           onPress={() => setTicketModalVisible(true)}
@@ -234,6 +228,15 @@ const DetallesLibro = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Ver Ticket de Reserva</Text>
         </TouchableOpacity>
       )}
+
+        </View>
+        
+      </View>
+
+      <Text style={styles.descriptionTitle}>Descripción</Text>
+      <Text style={styles.description}>{book.description}</Text>
+
+      
 
       <Modal isVisible={isModalVisible}>
         <View style={styles.modalContent}>
