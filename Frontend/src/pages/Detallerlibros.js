@@ -48,7 +48,8 @@ const DetallesLibro = ({ route, navigation }) => {
     getUserData();
   }, []);
 
-  const API_URL = "http://192.168.1.70:3000/biblioteca/Reservarlibro";
+  const API_URL = "http://192.168.0.4:3000/biblioteca/Reservarlibro";
+  //const API_URL = "http://192.168.1.70:3000/biblioteca/Reservarlibro";
 
   const handleReserve = async () => {
     if (!jsonUSER || !jsonUSER.identificacion) {

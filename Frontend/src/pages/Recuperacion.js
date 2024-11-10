@@ -44,7 +44,8 @@ const Recuperacion = ({ navigation }) => {
 
     try {
       const response = await axios.put(
-        `http://192.168.1.70:3000/biblioteca/updatePass/${userId}`,
+        `http://192.168.0.4:3000/biblioteca/updatePass/${userId}`,
+        //`http://192.168.1.70:3000/biblioteca/updatePass/${userId}`,
         { password }
       );
       if (response.status === 200) {
