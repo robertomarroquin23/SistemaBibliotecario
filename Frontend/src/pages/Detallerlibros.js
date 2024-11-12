@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,12 +5,16 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Modal from "react-native-modal";
 import axios from "axios";
+import React, { useState, useEffect } from "react";
+
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DetallesLibro = ({ route, navigation }) => {
   const { book } = route.params;
@@ -20,18 +23,48 @@ const DetallesLibro = ({ route, navigation }) => {
   const [isTicketModalVisible, setTicketModalVisible] = useState(false);
   const [ticketData, setTicketData] = useState(null);
   const [showDownloadButton, setShowDownloadButton] = useState(false);
+  const [jsonUSER, setJsonUser] = useState(null); 
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  //const API_URL = "http://192.168.1.63:3000/biblioteca/Reservarlibro";
-  const API_URL = "http:// 192.168.11.115:3000/biblioteca/Reservarlibro";
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const userData = await AsyncStorage.getItem("user");
+        if (userData) {
+          const parsedData = JSON.parse(userData);
+          setJsonUser(parsedData); 
+          console.log("Datos del usuario:", parsedData);
+        } else {
+          console.log("No se encontró el usuario en AsyncStorage");
+        }
+      } catch (error) {
+        console.error("Error al obtener los datos del usuario:", error);
+      }
+    };
+
+    getUserData();
+  }, []);
+
+  const API_URL = "http://192.168.0.4:3000/biblioteca/Reservarlibro";
+  //const API_URL = "http://192.168.1.70:3000/biblioteca/Reservarlibro";
+
 
   const handleReserve = async () => {
+    if (!jsonUSER || !jsonUSER.identificacion) {
+      console.error("No se encontraron datos de usuario válidos para reservar");
+      return;
+    }
+    
     try {
       const response = await axios.post(API_URL, {
         bookId: book.id,
+        identificacion: jsonUSER.identificacion,
+        nombre: jsonUSER.username,
+      //  apellidos: jsonUSER.apellidos || "",
+        
       });
 
       if (response.status === 200) {
@@ -48,8 +81,7 @@ const DetallesLibro = ({ route, navigation }) => {
   };
 
   const handleDownloadPDF = async () => {
-    const htmlContent = `
-<html>
+    const htmlContent = `<html>
 <head>
   <style>
     body {
@@ -126,11 +158,11 @@ const DetallesLibro = ({ route, navigation }) => {
       </tr>
       <tr>
         <td>ID de Alumno</td>
-        <td>${ticketData?.registro.idAlumno}</td>
+        <td>${jsonUSER?.identificacion}</td> <!-- Usar datos del localStorage -->
       </tr>
       <tr>
         <td>Usuario</td>
-        <td>Juan Pérez</td>
+        <td>${jsonUSER?.username}</td> <!-- Usar datos del localStorage -->
       </tr>
     </table>
     <div class="footer">
@@ -143,7 +175,7 @@ const DetallesLibro = ({ route, navigation }) => {
     </div>
   </div>
 </body>
-</html>
+</html> 
     `;
 
     try {
@@ -190,13 +222,7 @@ const DetallesLibro = ({ route, navigation }) => {
               <Text style={styles.buttonText}>Reservar</Text>
             </TouchableOpacity>
           )}
-        </View>
-      </View>
-
-      <Text style={styles.descriptionTitle}>Descripción</Text>
-      <Text style={styles.description}>{book.description}</Text>
-
-      {showDownloadButton && (
+          {showDownloadButton && (
         <TouchableOpacity
           style={styles.downloadButton}
           onPress={() => setTicketModalVisible(true)}
@@ -204,6 +230,15 @@ const DetallesLibro = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Ver Ticket de Reserva</Text>
         </TouchableOpacity>
       )}
+
+        </View>
+        
+      </View>
+
+      <Text style={styles.descriptionTitle}>Descripción</Text>
+      <Text style={styles.description}>{book.description}</Text>
+
+      
 
       <Modal isVisible={isModalVisible}>
         <View style={styles.modalContent}>

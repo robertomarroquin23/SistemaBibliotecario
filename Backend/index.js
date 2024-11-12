@@ -45,19 +45,22 @@ mongoose
     console.error("Error conectando a MongoDB", err);
   });
 ///primero llenen los libros en mongo si usan lo mismo que lo mio la base se llama:Proyectofinalmoviles
-//sgundo llenen la base:http://localhost:3000/biblioteca/getlibros/getlibros
+//sgundo llenen la base:http:/localhost:3000/biblioteca/getlibros/getlibros
 ///ejecuten eso en el thunderclient es en get no pongan nad amas solo el link y sha
 //despues de eso vuelvana reiniciar el cierren el npm start y tendria que imprimirles los libros de moongo en consola el solo en formato json
 app.use("/biblioteca", librosRoutes);
 app.use("/biblioteca/", userRoutes);
 app.use("/ObtenerLibros", librosRoutes);
 app.use("/biblioteca/getlibros", librosRoutes);
-app.use("/biblioteca/VerReservas", librosRoutes);
+app.use("/biblioteca/VerReservas", librosRoutes);  
+app.use("/biblioteca/VerTodasReservas", librosRoutes);
+app.use("/biblioteca/devolverStock", librosRoutes);
 
 // Ejemplo de ruta
 app.post("/api/login", (req, res) => {
   // Tu lógica de login
-  res.json({ message: "Inicio de sesión exitoso", token: "token_jwt" });
+  res.json({ message: 'Inicio de sesión exitoso', token: 'token_jwt', });
+  
 });
 
 app.listen(port, () => console.log(`app listening on port ${port}`));

@@ -13,6 +13,8 @@ import {
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const { width } = Dimensions.get("window");
 
@@ -74,7 +76,11 @@ const API_URL = "http://192.168.11.115:3000/ObtenerLibros/getlibrosmongo";
 }
 
 const Principal = ({ navigation }) => {
+  const [jsonUSER, setJsonUser] = useState(null); 
+
   const [searchQuery, setSearchQuery] = useState("");
+  const [librosDetalles, setLibrosDetalles] = useState([]);
+
   const [books, setbooks] = useState([]);
   const colorAnimation = useRef(new Animated.Value(0)).current;
   const [recommendedBooks, setRecommendedBooks] = useState([]);
@@ -123,6 +129,22 @@ const Principal = ({ navigation }) => {
     fetchData();
   }, []);*/
   }
+  const getUserData = async () => {
+    try {
+      const userData = await AsyncStorage.getItem("user");
+
+      if (userData) {
+        const jsonUSER = JSON.parse(userData);
+        setJsonUser(jsonUSER); 
+        console.log("Datos del usuario:", jsonUSER);
+      } else {
+        console.log("No se encontró el usuario en AsyncStorage");
+      }
+    } catch (error) {
+      console.error("Error al obtener los datos del usuario:", error);
+    }
+  };
+
   ///funcion para obtener los libros
   useEffect(() => {
     const fetchBooks = async () => {
@@ -134,6 +156,7 @@ const Principal = ({ navigation }) => {
         console.error("sucedio un error :", error);
       }
     };
+    getUserData();
 
     fetchBooks();
   }, []);
@@ -192,13 +215,22 @@ const Principal = ({ navigation }) => {
     },
   ];*/
   }
+ 
+
 
   const backgroundColorInterpolate = colorAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [colors[0], colors[colors.length - 1]],
     extrapolate: "clamp",
   });
-
+  //no lo borren sino les dara errro
+  if (!jsonUSER) {
+    return (
+      <View>
+        <Text>Cargando datos del usuario...</Text>
+      </View>
+    );
+  }
   return (
     <ScrollView style={styles.scrollContainer}>
       <View style={styles.header}>
@@ -215,7 +247,10 @@ const Principal = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <Text style={styles.headerName}>Hola, Samuel</Text>
+       
+            
+
+        <Text style={styles.headerName}>Hola, {jsonUSER.username}</Text>
         <Text style={styles.headerText}>Bienvenido {"\n"}otra vez!!!</Text>
       </View>
       <View style={styles.container}>

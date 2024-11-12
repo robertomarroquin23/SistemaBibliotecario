@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     minLength: 3,
     trim: true,
   },
+
   email: {
     type: String,
     required: true,
@@ -58,6 +59,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+  },
+  ///1 pa estudiante 2 pa profesor o admin 
+  roll: {
+    type: Number,
+    
+      enum: [1, 2], 
+    
+    
   },
 });
 
