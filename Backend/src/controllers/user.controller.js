@@ -36,7 +36,7 @@ export class UserController {
       // Crear un nuevo usuario
       const newUser = new User({
         username,
-       // apellido,
+       //  apellido,
         email,
         password,
         fechaNacimiento,
