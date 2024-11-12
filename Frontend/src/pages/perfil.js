@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -10,40 +10,88 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("window");
 
 const Perfil = () => {
   const [selectedTab, setSelectedTab] = useState("Información");
   const [isEditing, setIsEditing] = useState(false);
-  const [profileImage, setProfileImage] = useState("https://via.placeholder.com/100");
+  const [profileImage, setProfileImage] = useState(
+    "https://via.placeholder.com/100"
+  );
   const [userName, setUserName] = useState("Nombre del Usuario");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [birthDate, setBirthDate] = useState(new Date());
+  const [jsonUSER, setJsonUser] = useState(null);
 
+  const getUserData = async () => {
+    try {
+      const userData = await AsyncStorage.getItem("user");
+
+      if (userData) {
+        const jsonUSER = JSON.parse(userData);
+        setJsonUser(jsonUSER);
+        console.log("Datos del usuario:", jsonUSER);
+      } else {
+        console.log("No se encontró el usuario en AsyncStorage");
+      }
+    } catch (error) {
+      console.error("Error al obtener los datos del usuario:", error);
+    }
+  };
   const [userInfo, setUserInfo] = useState({
-    edad: "25",
-    fechaNacimiento: new Date(1998, 0, 1), 
-    ciudad: "San Salvador",
-    carnet: "12345678",
-    carrera: "Ingeniería Informática",
-    anioIngreso: "2022",
-    correo: "usuario@universidad.edu",
-    facultad: "Ingeniería y Arquitectura",
-    telefono: "+503 1234 5678",
-    direccion: "Colonia Universitaria, San Salvador",
-    pais: "El Salvador",
-    identificacion: "987654321",
+    edad: "",
+    fechaNacimiento: "",
+    ciudad: "",
+    carnet: "",
+    carrera: "",
+    anioIngreso: "",
+    correo: "",
+    facultad: "",
+    telefono: "",
+    direccion: "",
+    pais: "",
+    identificacion: "",
+    username: "",
   });
 
+  useEffect(() => {
+    if (jsonUSER) {
+      setUserInfo({
+        edad: jsonUSER.edad || "",
+        fechaNacimiento: jsonUSER.fechaNacimiento || "",
+        ciudad: jsonUSER.ciudad || "",
+        carnet: jsonUSER.carnet || "",
+        carrera: jsonUSER.carrera || "",
+        anioIngreso: jsonUSER.anioIngreso || "",
+        email: jsonUSER.email || "",
+        facultad: jsonUSER.facultad || "",
+        telefono: jsonUSER.telefono || "",
+        direccion: jsonUSER.direccion || "",
+        pais: jsonUSER.pais || "",
+        identificacion: jsonUSER.identificacion || "",
+        username: jsonUSER.username,
+      });
+    }
+  }, [jsonUSER]);
+
+  useEffect(() => {
+    getUserData();
+  }, []);
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
   };
 
+  useEffect(() => {
+    if (jsonUSER && jsonUSER.username) {
+      setUserName(jsonUSER.username);
+    }
+  }, [jsonUSER]);
   const pickImage = async () => {
-    if (!isEditing) return; 
+    if (!isEditing) return;
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -85,18 +133,22 @@ const Perfil = () => {
         </>
       ) : (
         <>
-          <TouchableOpacity onPress={() => {
-            if (isEditing) {
-              setShowDatePicker(true);
-            }
-          }}>
-            <Text style={styles.infoValue}>{value instanceof Date ? value.toLocaleDateString() : value}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              if (isEditing) {
+                setShowDatePicker(true);
+              }
+            }}
+          >
+            <Text style={styles.infoValue}>
+              {value instanceof Date ? value.toLocaleDateString() : value}
+            </Text>
           </TouchableOpacity>
           {isEditing && (
             <TextInput
               style={[styles.infoValue, styles.input]}
               value={value}
-              editable={false} 
+              editable={false}
             />
           )}
         </>
@@ -132,18 +184,34 @@ const Perfil = () => {
 
       <View style={styles.tabContainer}>
         <TouchableOpacity
-          style={[styles.tab, selectedTab === "Información" && styles.activeTab]}
+          style={[
+            styles.tab,
+            selectedTab === "Información" && styles.activeTab,
+          ]}
           onPress={() => setSelectedTab("Información")}
         >
-          <Text style={[styles.tabText, selectedTab === "Información" && styles.activeTabText]}>
+          <Text
+            style={[
+              styles.tabText,
+              selectedTab === "Información" && styles.activeTabText,
+            ]}
+          >
             Información
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tab, selectedTab === "Historial de Préstamos" && styles.activeTab]}
+          style={[
+            styles.tab,
+            selectedTab === "Historial de Préstamos" && styles.activeTab,
+          ]}
           onPress={() => setSelectedTab("Historial de Préstamos")}
         >
-          <Text style={[styles.tabText, selectedTab === "Historial de Préstamos" && styles.activeTabText]}>
+          <Text
+            style={[
+              styles.tabText,
+              selectedTab === "Historial de Préstamos" && styles.activeTabText,
+            ]}
+          >
             Historial de Préstamos
           </Text>
         </TouchableOpacity>
@@ -153,17 +221,29 @@ const Perfil = () => {
         {selectedTab === "Información" ? (
           <View style={styles.infoContainer}>
             {renderInfoBox("Edad", userInfo.edad, "edad")}
-            {renderInfoBox("Fecha de Nacimiento", userInfo.fechaNacimiento, "fechaNacimiento")}
+            {renderInfoBox(
+              "Fecha de Nacimiento",
+              userInfo.fechaNacimiento,
+              "fechaNacimiento"
+            )}
             {renderInfoBox("Ciudad", userInfo.ciudad, "ciudad")}
             {renderInfoBox("Carnet", userInfo.carnet, "carnet")}
             {renderInfoBox("Carrera", userInfo.carrera, "carrera")}
-            {renderInfoBox("Año de Ingreso", userInfo.anioIngreso, "anioIngreso")}
-            {renderInfoBox("Correo Electrónico", userInfo.correo, "correo")}
+            {renderInfoBox(
+              "Año de Ingreso",
+              userInfo.anioIngreso,
+              "anioIngreso"
+            )}
+            {renderInfoBox("Correo Electrónico", userInfo.email, "email")}
             {renderInfoBox("Facultad", userInfo.facultad, "facultad")}
             {renderInfoBox("Teléfono", userInfo.telefono, "telefono")}
             {renderInfoBox("Dirección", userInfo.direccion, "direccion")}
             {renderInfoBox("País", userInfo.pais, "pais")}
-            {renderInfoBox("Identificación", userInfo.identificacion, "identificacion")}
+            {renderInfoBox(
+              "Identificación",
+              userInfo.identificacion,
+              "identificacion"
+            )}
           </View>
         ) : (
           <Text style={styles.contentText}>Historial de préstamos...</Text>
@@ -217,7 +297,6 @@ const styles = StyleSheet.create({
   tab: {
     padding: 10,
     paddingHorizontal: 20,
-    
   },
   activeTab: {
     backgroundColor: "#000",
@@ -238,8 +317,6 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
     marginBottom: 100,
-
-
   },
   infoBox: {
     width: "48%",
@@ -253,7 +330,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
     fontWeight: "bold",
-    marginVertical: 10, 
+    marginVertical: 10,
   },
   input: {
     borderWidth: 1,

@@ -16,9 +16,9 @@ const { width } = Dimensions.get("window");
 const Devolucion = () => {
   const [reservaDetalles, setReservasDetalles] = useState([]);
   const [infoLibros, setInfoLibros] = useState([]);
-  const API_URL = "http://192.168.0.4:3000/biblioteca/VerTodasReservas";
-  const API_URL2 = "http://192.168.0.4:3000/biblioteca/devolverStock";
-  const API_URL3 = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
+  const API_URL = "http://192.168.0.8:3000/biblioteca/VerTodasReservas";
+  const API_URL2 = "http://192.168.0.8:3000/biblioteca/devolverStock";
+  const API_URL3 = "http://192.168.0.8:3000/ObtenerLibros/getlibrosmongo";
   //const API_URL = "http://192.168.1.70:3000/biblioteca/VerTodasReservas";
   //const API_URL2 = "http://192.168.1.70:3000/biblioteca/devolverStock";
   //const API_URL3 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
@@ -89,12 +89,16 @@ const Devolucion = () => {
       <View style={styles.tarjetasContainer}>
         {reservaDetalles.length > 0 ? (
           reservaDetalles.map((libro, index) => {
-            const libroInfo = infoLibros.find((info) => info._id === libro.libroId);
+            const libroInfo = infoLibros.find(
+              (info) => info._id === libro.libroId
+            );
 
             return (
               <View key={index} style={styles.cardItem}>
                 <View style={styles.bookDetails}>
-                  <Text style={styles.bookTitle}>Título: {libroInfo?.title || 'Título no disponible'}</Text>
+                  <Text style={styles.bookTitle}>
+                    Título: {libroInfo?.title || "Título no disponible"}
+                  </Text>
                   <Text style={styles.bookUser}>
                     Usuario que lo prestó: {libro.nombre}
                   </Text>

@@ -2,28 +2,39 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  Alert, 
 } from "react-native";
 import axios from "axios";
-//import AsyncStorage from "@react-native-async-storage/async-storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+<<<<<<< HEAD
   URL_GETUSER = "http://192.168.0.4:3000/biblioteca/getbyid";
   //URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
 
   const Recuperacion = () => {
     navigation.navigate("Verificacion");
   };
+=======
+URL_GETUSER= "http://192.168.11.115:3000/biblioteca/getbyid";
+//URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
+
+  const Recuperacion = () => { 
+    navigation.navigate('Verificacion'); 
+  }; 
+>>>>>>> fb9fbd326f7b57b6519f3fe3a9a457aed9ba59bd
 
   const handleLogin = async () => {
     try {
+
+
       //const response = await axios.post("http://192.168.1.70:3000/biblioteca/login", {
+<<<<<<< HEAD
       const response = await axios.post(
         "http://192.168.0.8:3000/biblioteca/login",
         {
@@ -32,15 +43,22 @@ const LoginScreen = ({ navigation }) => {
         }
       );
 
+=======
+      const response = await axios.post("http://192.168.11.115:3000/biblioteca/login", {
+        email: email,
+        password: password,
+      });
+  
+>>>>>>> fb9fbd326f7b57b6519f3fe3a9a457aed9ba59bd
       if (response.data.id) {
         const id = response.data.id;
         console.log(id);
 
         try {
           const userResponse = await axios.get(`${URL_GETUSER}/${id}`);
-          if (userResponse.status === 200) {
-            const userData = userResponse.data;
-            await AsyncStorage.setItem("user", JSON.stringify(userData));
+          if (userResponse.status === 200) { 
+            const userData = userResponse.data; 
+            await AsyncStorage.setItem("user", JSON.stringify(userData)); 
             const user = JSON.parse(await AsyncStorage.getItem("user"));
             console.log(user.roll);
 
@@ -54,6 +72,7 @@ const LoginScreen = ({ navigation }) => {
           console.error("Error en la petición:", error);
         }
       }
+<<<<<<< HEAD
 
       await AsyncStorage.setItem("token", response.data.token);
 
@@ -62,6 +81,12 @@ const LoginScreen = ({ navigation }) => {
       navigation.navigate("MainTabs");
     } catch (error) {
       if (error.response && error.response.status === 400) {
+=======
+  
+      await AsyncStorage.setItem("token", response.data.token); 
+    } catch (error) { 
+      if (error.response && error.response.status === 400) { 
+>>>>>>> fb9fbd326f7b57b6519f3fe3a9a457aed9ba59bd
         Alert.alert("Error", "Credenciales incorrectas");
       } else {
         Alert.alert("Error", "Hubo un problema con el servidor", error);
@@ -72,30 +97,37 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.form}>
-        <Text style={styles.title}>INICIA SESION</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          keyboardType="email-address"
-          onChangeText={setEmail}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+      <Text style={styles.titleb}>¡Bienvenido!</Text>
+      <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
 
+<<<<<<< HEAD
         <Text style={styles.forgotPassword} onPress={Recuperacion}>
           ¿Olvidaste tu contraseña?
         </Text>
       </View>
+=======
+      <TextInput
+        style={styles.input} 
+        placeholder="Email" 
+        placeholderTextColor="#ccc"
+        value={email} 
+        keyboardType="email-address"
+        onChangeText={setEmail}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor="#ccc"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Iniciar Sesión</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.forgotPassword} onPress={Recuperacion}>¿Olvidaste tu contraseña?</Text>
+>>>>>>> fb9fbd326f7b57b6519f3fe3a9a457aed9ba59bd
     </View>
   );
 };
@@ -105,41 +137,42 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#f0f0f0",
   },
-  form: {
-    width: "100%",
-    maxWidth: 400,
-    alignItems: "center",
+  titleb: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 10,
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    textAlign: "center",
+  subtitle: {
+    fontSize: 18,
+    color: "#888",
+    marginBottom: 30,
   },
   input: {
-    width: "100%",
-    height: 40,
-    borderColor: "gray",
+    width: "80%",
+    padding: 15,
+    marginVertical: 10,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    borderColor: "#ddd",
     borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-    borderRadius: 5,
+    fontSize: 16,
+    color: "#333",
   },
   button: {
-    width: "100%",
-    backgroundColor: "#007BFF",
-    paddingVertical: 20,
-    borderRadius: 5,
+    width: "80%",
+    backgroundColor: "#000000",
+    padding: 15,
+    borderRadius: 10,
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 20,
   },
   buttonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
   },
   forgotPassword: {
     color: "#ff4d4d",

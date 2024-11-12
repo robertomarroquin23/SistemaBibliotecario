@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 const Verificacion = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -11,9 +17,8 @@ const Verificacion = () => {
   const [email, setEmail] = useState("");
   const [enteredCode, setEnteredCode] = useState("");
   const navigation = useNavigation();
-URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
-//URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
-
+  URL_GETUSER = "http://192.168.0.8:3000/biblioteca/getbyid";
+  //URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
 
   const generateVerificationCode = async () => {
     const code = Math.floor(1000 + Math.random() * 9000);
@@ -22,10 +27,13 @@ URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
 
     try {
       //const mail = await axios.post("http://192.168.1.70:3000/biblioteca/sendEmail", {
-      const mail = await axios.post("http://192.168.0.4:3000/biblioteca/sendEmail", {
-        email,
-        code,
-      });
+      const mail = await axios.post(
+        "http://192.168.0.8:3000/biblioteca/sendEmail",
+        {
+          email,
+          code,
+        }
+      );
 
       if (mail.data._id) {
         const id = mail.data._id;
@@ -45,10 +53,16 @@ URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
         }
       }
 
-      Alert.alert("Éxito", "El código de verificación ha sido enviado a tu correo.");
+      Alert.alert(
+        "Éxito",
+        "El código de verificación ha sido enviado a tu correo."
+      );
     } catch (error) {
       console.error("Error al enviar el correo:", error);
-      Alert.alert("Error", "Hubo un problema al enviar el código de verificación.");
+      Alert.alert(
+        "Error",
+        "Hubo un problema al enviar el código de verificación."
+      );
     }
   };
 
@@ -69,7 +83,10 @@ URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
         value={email}
         onChangeText={setEmail}
       />
-      <TouchableOpacity style={styles.button} onPress={generateVerificationCode}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={generateVerificationCode}
+      >
         <Text style={styles.buttonText}>Verificar correo</Text>
       </TouchableOpacity>
 
@@ -81,7 +98,11 @@ URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
         onChangeText={setEnteredCode}
         editable={isEmailVerified}
       />
-      <TouchableOpacity style={styles.button} onPress={verifyCode} disabled={!isEmailVerified}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={verifyCode}
+        disabled={!isEmailVerified}
+      >
         <Text style={styles.buttonText}>Verificar código</Text>
       </TouchableOpacity>
     </View>

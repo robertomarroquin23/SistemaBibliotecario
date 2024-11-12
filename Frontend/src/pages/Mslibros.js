@@ -16,8 +16,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width } = Dimensions.get("window");
 
 const MisLibros = ({ navigation }) => {
+<<<<<<< HEAD
   const API_URL = "http://192.168.0.8:3000/biblioteca/VerReservas";
   const API_URL2 = "http://192.168.0.8:3000/ObtenerLibros/getlibrosmongo";
+=======
+  const API_URL = "http://192.168.11.115:3000/biblioteca/VerReservas";
+  const API_URL2 = "http://192.168.11.115:3000/ObtenerLibros/getlibrosmongo";
+>>>>>>> fb9fbd326f7b57b6519f3fe3a9a457aed9ba59bd
 
   ///const API_URL = "http://192.168.0.15:3000/biblioteca/VerReservas";
   //const API_URL2 = "http://192.168.0.15:3000/ObtenerLibros/getlibrosmongo";
@@ -195,25 +200,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   messageContainer: {
-    width: width * 0.9,
-    height: 200,
-    backgroundColor: "#e0f7fa",
-    borderRadius: 20,
-    alignSelf: "center",
-    alignItems: "center",
+    width: "100%",
+    height: 250,
+    backgroundColor: "#000000",
+    borderBottomRightRadius: 60,
     justifyContent: "center",
-    marginVertical: 20,
-    top: 15,
+    alignItems: "center",
+    paddingHorizontal: 20,
   },
   messageText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#00796b",
+    color: "#fff",          
+    fontSize: 27,
     textAlign: "center",
-  },
-  tarjetasContainer: {
+  }, tarjetasContainer: {
+    top: 20,
     alignItems: "center",
-    marginBottom: 70,
+    marginBottom: 90,
   },
   cardItem: {
     flexDirection: "row",
