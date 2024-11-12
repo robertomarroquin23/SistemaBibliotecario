@@ -11,8 +11,8 @@ const Verificacion = () => {
   const [email, setEmail] = useState("");
   const [enteredCode, setEnteredCode] = useState("");
   const navigation = useNavigation();
-//  URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
-URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
+URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
+//URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
 
 
   const generateVerificationCode = async () => {
@@ -21,6 +21,7 @@ URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
     setIsEmailVerified(true);
 
     try {
+      //const mail = await axios.post("http://192.168.1.70:3000/biblioteca/sendEmail", {
       const mail = await axios.post("http://192.168.0.4:3000/biblioteca/sendEmail", {
         email,
         code,

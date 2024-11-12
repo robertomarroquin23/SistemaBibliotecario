@@ -16,19 +16,24 @@ const { width } = Dimensions.get("window");
 const Devolucion = () => {
   const [reservaDetalles, setReservasDetalles] = useState([]);
   const [infoLibros, setInfoLibros] = useState([]);
- // const API_URL = "http://192.168.0.4:3000/biblioteca/VerTodasReservas";
-  //const API_URL2 = "http://192.168.0.4:3000/biblioteca/devolverStock";
-  //const API_URL3 = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
-  const API_URL = "http://192.168.1.70:3000/biblioteca/VerTodasReservas";
-  const API_URL2 = "http://192.168.1.70:3000/biblioteca/devolverStock";
-  const API_URL3 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
+  const API_URL = "http://192.168.0.4:3000/biblioteca/VerTodasReservas";
+  const API_URL2 = "http://192.168.0.4:3000/biblioteca/devolverStock";
+  const API_URL3 = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
+  //const API_URL = "http://192.168.1.70:3000/biblioteca/VerTodasReservas";
+  //const API_URL2 = "http://192.168.1.70:3000/biblioteca/devolverStock";
+  //const API_URL3 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";
 
   const cargarReservas = async () => {
     try {
       const response = await axios.get(API_URL);
       setReservasDetalles(response.data);
     } catch (error) {
-      console.error("Error al cargar las reservas:", error);
+      if (error.response && error.response.status === 404) {
+        console.log("El recurso no fue encontrado.");
+        setReservasDetalles([]);
+      } else {
+        console.error("Error al cargar las reservas:", error);
+      }
     }
 
     try {

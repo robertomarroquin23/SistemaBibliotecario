@@ -13,7 +13,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const URL_GETUSER = "http://192.168.11.160:3000/biblioteca/getbyid";
+URL_GETUSER= "http://192.168.11.115:3000/biblioteca/getbyid";
+//URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
 
   const Recuperacion = () => { 
     navigation.navigate('Verificacion'); 
@@ -21,7 +22,10 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://192.168.11.160:3000/biblioteca/login", {
+
+
+      //const response = await axios.post("http://192.168.1.70:3000/biblioteca/login", {
+      const response = await axios.post("http://192.168.11.115:3000/biblioteca/login", {
         email: email,
         password: password,
       });

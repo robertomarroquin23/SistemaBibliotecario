@@ -13,6 +13,8 @@ import Devolucion from "./src/pages/Devolucion";
 import Principal from "./src/pages/Principal";
 import Recuperacion from "./src/pages/Recuperacion";
 import Verificacion from "./src/pages/Verificacion";
+import manejolibros from "./src/pages/RegistrarLibros";
+
 import Libros from "./src/pages/libros";
 
 const Tab = createBottomTabNavigator();
@@ -47,6 +49,9 @@ const MainTabs = ({ route }) => {
           }
           if (route.name === "Devolucion") {
             iconName = "refresh";
+          }
+          if (route.name === "manejolibros") {
+            iconName = "book";
           }
 
           return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
@@ -103,6 +108,12 @@ const MainTabs = ({ route }) => {
         component={Perfil}
         options={{ headerShown: false }}
       />
+        <Tab.Screen
+        name="manejolibros"
+        component={manejolibros}
+        options={{ headerShown: false }}
+      />
+
     </Tab.Navigator>
   );
 };
