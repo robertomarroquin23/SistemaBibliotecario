@@ -45,7 +45,7 @@ export class LibrosController {
         description: item.volumeInfo.description
           ? item.volumeInfo.description
           : "Sin descripcion",
-        isbn: item.volumeInfo.industryIdentifiers[0],
+          isbn: item.volumeInfo?.industryIdentifiers?.[0] || "",
         categories: item.volumeInfo.categories
           ? item.volumeInfo.categories[0]
           : "Sin categoría",
@@ -148,17 +148,16 @@ export class LibrosController {
   }
 
   async deletebooks(req, res) {
-    const id = req.params.id;
-
-    const edition = await Books.findById(id);
-    if (!edition) {
-      throw new Error("El producto no existe");
-    }
     try {
-      await Books.deleteOne({ id });
-      return res.status(200).json({ message: "Producto eliminado" });
+      const { id } = req.params;
+      const deletedBook = await Books.findByIdAndDelete(id);
+      if (!deletedBook) {
+        return res.status(404).json({ message: "Libro no encontrado" });
+      }
+      return res.status(200).json({ message: "Libro eliminado correctamente" });
     } catch (error) {
-      return res.status(500).json({ error: "Error al eliminar el producto" });
+      console.error("Error al eliminar el libro:", error);
+      return res.status(500).json({ message: "Error al eliminar el libro" });
     }
-  }
+}
 }

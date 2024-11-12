@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.1.70:3000/biblioteca/login",
+        "http://192.168.11.115:3000/biblioteca/login",
         {
           email: email,
           password: password,

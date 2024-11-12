@@ -14,6 +14,7 @@ import Perfil from "./src/pages/perfil";
 import Principal from "./src/pages/Principal";
 import Recuperacion from "./src/pages/Recuperacion";
 import Verificacion from "./src/pages/Verificacion";
+import manejolibros from "./src/pages/RegistrarLibros";
 
 import Libros from "./src/pages/libros";
 
@@ -37,6 +38,9 @@ const MainTabs = () => {
             iconName = "book";
           }
           if (route.name === "Perfil") {
+            iconName = "book";
+          }
+          if (route.name === "manejolibros") {
             iconName = "book";
           }
 
@@ -82,6 +86,11 @@ const MainTabs = () => {
         <Tab.Screen
         name="Perfil"
         component={Perfil}
+        options={{ headerShown: false }}
+      />
+        <Tab.Screen
+        name="manejolibros"
+        component={manejolibros}
         options={{ headerShown: false }}
       />
 
