@@ -17,8 +17,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-<<<<<<< HEAD
-=======
   // Dirección del usuario
   address: {
     street: { type: String, trim: true },
@@ -42,9 +40,8 @@ const userSchema = new mongoose.Schema({
   },
   roll: {
     type: Number,
-      enum: [1, 2],     
+    enum: [1, 2],
   },
->>>>>>> samuel
 });
 
 const User = mongoose.model("user", userSchema);

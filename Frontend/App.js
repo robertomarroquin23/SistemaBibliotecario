@@ -14,15 +14,12 @@ import Principal from "./src/pages/Principal";
 import Recuperacion from "./src/pages/Recuperacion";
 import Verificacion from "./src/pages/Verificacion";
 import manejolibros from "./src/pages/RegistrarLibros";
-import Register from "./src/pages/RegisterScreen/Register"
-import RegisterAdmin from "./src/pages/RegisterScreen/RegisterAdmin"
+import Register from "./src/pages/RegisterScreen/Register";
+import RegisterAdmin from "./src/pages/RegisterScreen/RegisterAdmin";
 
-<<<<<<< HEAD
-=======
 import Libros from "./src/pages/libros";
 
 const Tab = createBottomTabNavigator();
->>>>>>> samuel
 const Stack = createStackNavigator();
 
 const MainTabs = ({ route }) => {
@@ -59,7 +56,9 @@ const MainTabs = ({ route }) => {
             iconName = "book";
           }
 
-          return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+          return (
+            <MaterialCommunityIcons name={iconName} size={size} color={color} />
+          );
         },
         tabBarShowLabel: false,
         tabBarStyle: {
@@ -102,7 +101,11 @@ const MainTabs = ({ route }) => {
           component={Devolucion}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="refresh" size={size} color={color} />
+              <MaterialCommunityIcons
+                name="refresh"
+                size={size}
+                color={color}
+              />
             ),
             headerShown: false,
           }}
@@ -110,15 +113,19 @@ const MainTabs = ({ route }) => {
       )}
       {isButtonVisible && (
         <Tab.Screen
-        name="RegisterAdmin"
-        component={RegisterAdmin}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account-multiple-plus" size={size} color={color} />
-          ),
-          headerShown: false,
-        }}
-      />
+          name="RegisterAdmin"
+          component={RegisterAdmin}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="account-multiple-plus"
+                size={size}
+                color={color}
+              />
+            ),
+            headerShown: false,
+          }}
+        />
       )}
       <Tab.Screen
         name="Perfil"
@@ -127,12 +134,11 @@ const MainTabs = ({ route }) => {
       />
       {isButtonVisible && (
         <Tab.Screen
-        name="manejolibros"
-        component={manejolibros}
-        options={{ headerShown: false }}
-      />
+          name="manejolibros"
+          component={manejolibros}
+          options={{ headerShown: false }}
+        />
       )}
-
     </Tab.Navigator>
   );
 };
@@ -147,10 +153,6 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-<<<<<<< HEAD
-          name="Home"
-          component={Home}
-=======
           name="MainTabs"
           component={MainTabs}
           options={{ headerShown: false }}
@@ -184,7 +186,6 @@ const App = () => {
           name="Recuperacion"
           component={Recuperacion}
           options={{ headerShown: false }}
->>>>>>> samuel
         />
       </Stack.Navigator>
     </NavigationContainer>
