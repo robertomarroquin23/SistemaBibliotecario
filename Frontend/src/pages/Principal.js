@@ -38,16 +38,8 @@ const colors = [
 ];
 //aqui poner simpre la ip de la maquina no local ni 127.0.0.1 si les da un network error corrar ipconfig en la terminal y cambien la ip
 //const API_URL = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo"; 192.168.0.15:3000
-<<<<<<< HEAD
-<<<<<<< HEAD
-const API_URL = "http://192.168.0.8:3000/ObtenerLibros/getlibrosmongo";
-=======
-const API_URL = "http://192.168.11.160:3000/ObtenerLibros/getlibrosmongo";
-=======
-const API_URL = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
->>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
-//const API_URL = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
->>>>>>> fb9fbd326f7b57b6519f3fe3a9a457aed9ba59bd
+
+const API_URL = "http://192.168.10.138:3000/ObtenerLibros/getlibrosmongo";
 {
   /*const recommendedBooks = [
   {
@@ -330,7 +322,6 @@ const Principal = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  
   header: {
     width: "100%",
     height: 300,

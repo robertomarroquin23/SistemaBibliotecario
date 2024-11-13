@@ -43,21 +43,6 @@ const Perfil = () => {
     }
   };
   const [userInfo, setUserInfo] = useState({
-<<<<<<< HEAD
-    edad: "",
-    fechaNacimiento: "",
-    ciudad: "",
-    carnet: "",
-    carrera: "",
-    anioIngreso: "",
-    correo: "",
-    facultad: "",
-    telefono: "",
-    direccion: "",
-    pais: "",
-    identificacion: "",
-    username: "",
-=======
     birthday: "",
     email: "",
     phone: "",
@@ -66,30 +51,13 @@ const Perfil = () => {
     city: "",
     state: "",
     personalEmail: "",
-    postalCode: ""
->>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
+    postalCode: "",
   });
 
   useEffect(() => {
     if (jsonUSER) {
-<<<<<<< HEAD
-      setUserInfo({
-        edad: jsonUSER.edad || "",
-        fechaNacimiento: jsonUSER.fechaNacimiento || "",
-        ciudad: jsonUSER.ciudad || "",
-        carnet: jsonUSER.carnet || "",
-        carrera: jsonUSER.carrera || "",
-        anioIngreso: jsonUSER.anioIngreso || "",
-        email: jsonUSER.email || "",
-        facultad: jsonUSER.facultad || "",
-        telefono: jsonUSER.telefono || "",
-        direccion: jsonUSER.direccion || "",
-        pais: jsonUSER.pais || "",
-        identificacion: jsonUSER.identificacion || "",
-        username: jsonUSER.username,
-=======
       console.log("jsonUSER:", jsonUSER); // Verifica los datos
-  
+
       setUserInfo({
         birthday: jsonUSER.birthday || "",
         email: jsonUSER.email || "",
@@ -98,9 +66,8 @@ const Perfil = () => {
         street: jsonUSER.address?.street || "", // Accede a la propiedad dentro de address
         city: jsonUSER.address?.city || "", // Accede a la propiedad dentro de address
         state: jsonUSER.address?.state || "", // Accede a la propiedad dentro de address
-        personalEmail: jsonUSER.personalEmail || "", 
-        postalCode: jsonUSER.address?.postalCode || "" 
->>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
+        personalEmail: jsonUSER.personalEmail || "",
+        postalCode: jsonUSER.address?.postalCode || "",
       });
     }
   }, [jsonUSER]);
@@ -226,56 +193,11 @@ const Perfil = () => {
             Información
           </Text>
         </TouchableOpacity>
-<<<<<<< HEAD
-        <TouchableOpacity
-          style={[
-            styles.tab,
-            selectedTab === "Historial de Préstamos" && styles.activeTab,
-          ]}
-          onPress={() => setSelectedTab("Historial de Préstamos")}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              selectedTab === "Historial de Préstamos" && styles.activeTabText,
-            ]}
-          >
-            Historial de Préstamos
-          </Text>
-        </TouchableOpacity>
-=======
->>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
       </View>
 
       <View style={styles.tabContent}>
         {selectedTab === "Información" ? (
           <View style={styles.infoContainer}>
-<<<<<<< HEAD
-            {renderInfoBox("Edad", userInfo.edad, "edad")}
-            {renderInfoBox(
-              "Fecha de Nacimiento",
-              userInfo.fechaNacimiento,
-              "fechaNacimiento"
-            )}
-            {renderInfoBox("Ciudad", userInfo.ciudad, "ciudad")}
-            {renderInfoBox("Carnet", userInfo.carnet, "carnet")}
-            {renderInfoBox("Carrera", userInfo.carrera, "carrera")}
-            {renderInfoBox(
-              "Año de Ingreso",
-              userInfo.anioIngreso,
-              "anioIngreso"
-            )}
-            {renderInfoBox("Correo Electrónico", userInfo.email, "email")}
-            {renderInfoBox("Facultad", userInfo.facultad, "facultad")}
-            {renderInfoBox("Teléfono", userInfo.telefono, "telefono")}
-            {renderInfoBox("Dirección", userInfo.direccion, "direccion")}
-            {renderInfoBox("País", userInfo.pais, "pais")}
-            {renderInfoBox(
-              "Identificación",
-              userInfo.identificacion,
-              "identificacion"
-            )}
-=======
             {renderInfoBox(
               "Fecha de Nacimiento",
               userInfo.birthday,
@@ -287,9 +209,12 @@ const Perfil = () => {
             {renderInfoBox("Teléfono", userInfo.phone, "phone")}
             {renderInfoBox("Codigo Postal", userInfo.postalCode, "postalCode")}
             {renderInfoBox("Estado", userInfo.state, "state")}
-            {renderInfoBox("Correo Personal", userInfo.personalEmail, "presonalEmail")}
+            {renderInfoBox(
+              "Correo Personal",
+              userInfo.personalEmail,
+              "presonalEmail"
+            )}
             {renderInfoBox("Usuario", userInfo.username, "username")}
->>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
           </View>
         ) : (
           <Text style={styles.contentText}>Historial de préstamos...</Text>
