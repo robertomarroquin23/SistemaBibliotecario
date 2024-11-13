@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
-  Alert, 
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,9 +16,9 @@ const LoginScreen = ({ navigation }) => {
   URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
 //URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
 
-  const Recuperacion = () => { 
-    navigation.navigate('Verificacion'); 
-  }; 
+  const Recuperacion = () => {
+    navigation.navigate('Verificacion');
+  };
 
   const handleLogin = async () => {
     try {
@@ -27,19 +27,19 @@ const LoginScreen = ({ navigation }) => {
         email: email,
         password: password,
       });
-  
+
       if (response.data.id) {
         const id = response.data.id;
         console.log(id);
-  
+
         try {
           const userResponse = await axios.get(`${URL_GETUSER}/${id}`);
-          if (userResponse.status === 200) { 
-            const userData = userResponse.data; 
-            await AsyncStorage.setItem("user", JSON.stringify(userData)); 
+          if (userResponse.status === 200) {
+            const userData = userResponse.data;
+            await AsyncStorage.setItem("user", JSON.stringify(userData));
             const user = JSON.parse(await AsyncStorage.getItem("user"));
             console.log(user.roll);
-  
+
             navigation.navigate("MainTabs", {
               hideButton: user.roll === 1,
             });
@@ -50,10 +50,10 @@ const LoginScreen = ({ navigation }) => {
           console.error("Error en la petición:", error);
         }
       }
-  
-      await AsyncStorage.setItem("token", response.data.token); 
-    } catch (error) { 
-      if (error.response && error.response.status === 400) { 
+
+      await AsyncStorage.setItem("token", response.data.token);
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
         Alert.alert("Error", "Credenciales incorrectas");
       } else {
         Alert.alert("Error", "Hubo un problema con el servidor", error);
@@ -61,17 +61,17 @@ const LoginScreen = ({ navigation }) => {
       }
     }
   };
-    
+
   return (
     <View style={styles.container}>
       <Text style={styles.titleb}>¡Bienvenido!</Text>
       <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
 
       <TextInput
-        style={styles.input} 
-        placeholder="Email" 
+        style={styles.input}
+        placeholder="Email"
         placeholderTextColor="#ccc"
-        value={email} 
+        value={email}
         keyboardType="email-address"
         onChangeText={setEmail}
       />
@@ -85,6 +85,11 @@ const LoginScreen = ({ navigation }) => {
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
+      </TouchableOpacity>
+
+      {/* Botón para navegar a la pantalla de registro */}
+      <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
+        <Text style={styles.registerButtonText}>Registrarse</Text>
       </TouchableOpacity>
 
       <Text style={styles.forgotPassword} onPress={Recuperacion}>¿Olvidaste tu contraseña?</Text>
@@ -138,6 +143,11 @@ const styles = StyleSheet.create({
     color: "#ff4d4d",
     marginTop: 15,
     fontSize: 14,
+  },
+  registerButtonText: {
+    color: '#007BFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
