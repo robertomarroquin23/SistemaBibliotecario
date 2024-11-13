@@ -16,8 +16,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width } = Dimensions.get("window");
 
 const MisLibros = ({ navigation }) => {
-  const API_URL = "http://192.168.11.115:3000/biblioteca/VerReservas";
-  const API_URL2 = "http://192.168.11.115:3000/ObtenerLibros/getlibrosmongo";
+  const API_URL = "http://192.168.0.4:3000/biblioteca/VerReservas";
+  const API_URL2 = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
 
   ///const API_URL = "http://192.168.0.15:3000/biblioteca/VerReservas";
   //const API_URL2 = "http://192.168.0.15:3000/ObtenerLibros/getlibrosmongo";

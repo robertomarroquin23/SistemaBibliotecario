@@ -31,15 +31,16 @@ const Recuperacion = ({ navigation }) => {
   };
 
   const handlePasswordChange = async () => {
+    if (!userId) {
+      Alert.alert("Error", "No se pudo encontrar el ID del usuario.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       Alert.alert("Error", "Las contraseñas no coinciden");
       return;
     }
 
-    if (!userId) {
-      Alert.alert("Error", "No se pudo encontrar el ID del usuario.");
-      return;
-    }
     setIsLoading(true);
 
     try {

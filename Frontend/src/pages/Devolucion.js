@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingVertical: 20,
-    backgroundColor: "#007BFF",
+    backgroundColor: "#000000",
     alignItems: "center",
   },
   headerText: {

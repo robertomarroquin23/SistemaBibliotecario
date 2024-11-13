@@ -212,6 +212,7 @@ export class UserController {
    
     const { email, code } = req.body;
     try {
+
       await transporter.sendMail({
         from: USER,
         to: email,
@@ -222,7 +223,7 @@ export class UserController {
     } catch (error) {
       console.error("Error al enviar el correo:", error);
       res.status(500).json({ message: "Error al enviar el correo", error });
-    }
+    } 
   }  
 
   async updatePass (req, res){
@@ -245,5 +246,20 @@ export class UserController {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Server error" });
     }
+  }
+
+  async verifyEmail (req, res){
+    const { email } = req.body
+    try {
+      const verify = await User.findOne({ email: email })
+
+      if (!verify) {
+        return res.status(404).json({ exists: false, message: "El correo no está registrado" });
+      }
+
+      res.status(200).json("El correo existe")  
+    } catch(error) {
+      res.status(500).json({ message: "Server error" });
+    } 
   }
 }
