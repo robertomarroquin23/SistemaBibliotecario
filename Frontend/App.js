@@ -1,9 +1,9 @@
-import React, { useState, useEffect,View, Text } from "react";
+import React, { useState, useEffect, View, Text } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native"; 
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; 
-import { createStackNavigator } from "@react-navigation/stack"; 
-import AsyncStorage from "@react-native-async-storage/async-storage"; 
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Login from "./src/pages/LoginScreen/Login";
 import Home from "./src/pages/HomeScreen/Home";
 import MisLibros from "./src/pages/Mslibros";
@@ -14,6 +14,8 @@ import Principal from "./src/pages/Principal";
 import Recuperacion from "./src/pages/Recuperacion";
 import Verificacion from "./src/pages/Verificacion";
 import manejolibros from "./src/pages/RegistrarLibros";
+import Register from "./src/pages/RegisterScreen/Register"
+import RegisterAdmin from "./src/pages/RegisterScreen/RegisterAdmin"
 
 import Libros from "./src/pages/libros";
 
@@ -25,7 +27,7 @@ const MainTabs = ({ route }) => {
 
   useEffect(() => {
     if (route.params?.hideButton) {
-      setIsButtonVisible(false);  
+      setIsButtonVisible(false);
     }
   }, [route.params?.hideButton]);
 
@@ -103,16 +105,30 @@ const MainTabs = ({ route }) => {
           }}
         />
       )}
+      {isButtonVisible && (
+        <Tab.Screen
+        name="RegisterAdmin"
+        component={RegisterAdmin}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account-multiple-plus" size={size} color={color} />
+          ),
+          headerShown: false,
+        }}
+      />
+      )}
       <Tab.Screen
         name="Perfil"
         component={Perfil}
         options={{ headerShown: false }}
       />
+      {isButtonVisible && (
         <Tab.Screen
         name="manejolibros"
         component={manejolibros}
         options={{ headerShown: false }}
       />
+      )}
 
     </Tab.Navigator>
   );
@@ -140,6 +156,16 @@ const App = () => {
         <Stack.Screen
           name="DetallesLibro"
           component={DetallesLibro}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RegisterAdmin"
+          component={RegisterAdmin}
           options={{ headerShown: false }}
         />
         <Stack.Screen

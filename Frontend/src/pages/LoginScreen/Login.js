@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
-  Alert, 
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+<<<<<<< HEAD
 <<<<<<< HEAD
   URL_GETUSER = "http://192.168.0.4:3000/biblioteca/getbyid";
   //URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
@@ -28,12 +29,23 @@ URL_GETUSER= "http://192.168.11.115:3000/biblioteca/getbyid";
     navigation.navigate('Verificacion'); 
   }; 
 >>>>>>> fb9fbd326f7b57b6519f3fe3a9a457aed9ba59bd
+=======
+  URL_GETUSER= "http://192.168.0.4:3000/biblioteca/getbyid";
+//URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
+
+  const Recuperacion = () => {
+    navigation.navigate('Verificacion');
+  };
+
+  const Register = () => {
+    navigation.navigate('Register');
+  };
+>>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
 
   const handleLogin = async () => {
     try {
-
-
       //const response = await axios.post("http://192.168.1.70:3000/biblioteca/login", {
+<<<<<<< HEAD
 <<<<<<< HEAD
       const response = await axios.post(
         "http://192.168.0.8:3000/biblioteca/login",
@@ -50,15 +62,22 @@ URL_GETUSER= "http://192.168.11.115:3000/biblioteca/getbyid";
       });
   
 >>>>>>> fb9fbd326f7b57b6519f3fe3a9a457aed9ba59bd
+=======
+      const response = await axios.post("http://192.168.0.4:3000/biblioteca/login", {
+        email: email,
+        password: password,
+      });
+
+>>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
       if (response.data.id) {
         const id = response.data.id;
         console.log(id);
 
         try {
           const userResponse = await axios.get(`${URL_GETUSER}/${id}`);
-          if (userResponse.status === 200) { 
-            const userData = userResponse.data; 
-            await AsyncStorage.setItem("user", JSON.stringify(userData)); 
+          if (userResponse.status === 200) {
+            const userData = userResponse.data;
+            await AsyncStorage.setItem("user", JSON.stringify(userData));
             const user = JSON.parse(await AsyncStorage.getItem("user"));
             console.log(user.roll);
 
@@ -72,6 +91,7 @@ URL_GETUSER= "http://192.168.11.115:3000/biblioteca/getbyid";
           console.error("Error en la petición:", error);
         }
       }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
       await AsyncStorage.setItem("token", response.data.token);
@@ -87,6 +107,12 @@ URL_GETUSER= "http://192.168.11.115:3000/biblioteca/getbyid";
     } catch (error) { 
       if (error.response && error.response.status === 400) { 
 >>>>>>> fb9fbd326f7b57b6519f3fe3a9a457aed9ba59bd
+=======
+
+      await AsyncStorage.setItem("token", response.data.token);
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+>>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
         Alert.alert("Error", "Credenciales incorrectas");
       } else {
         Alert.alert("Error", "Hubo un problema con el servidor", error);
@@ -107,10 +133,10 @@ URL_GETUSER= "http://192.168.11.115:3000/biblioteca/getbyid";
       </View>
 =======
       <TextInput
-        style={styles.input} 
-        placeholder="Email" 
+        style={styles.input}
+        placeholder="Email"
         placeholderTextColor="#ccc"
-        value={email} 
+        value={email}
         keyboardType="email-address"
         onChangeText={setEmail}
       />
@@ -124,6 +150,11 @@ URL_GETUSER= "http://192.168.11.115:3000/biblioteca/getbyid";
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
+      </TouchableOpacity>
+
+      {/* Botón para navegar a la pantalla de registro */}
+      <TouchableOpacity style={styles.registerButton} onPress={Register}>
+        <Text style={styles.registerButtonText}>Registrarse</Text>
       </TouchableOpacity>
 
       <Text style={styles.forgotPassword} onPress={Recuperacion}>¿Olvidaste tu contraseña?</Text>
@@ -178,6 +209,11 @@ const styles = StyleSheet.create({
     color: "#ff4d4d",
     marginTop: 15,
     fontSize: 14,
+  },
+  registerButtonText: {
+    color: '#007BFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

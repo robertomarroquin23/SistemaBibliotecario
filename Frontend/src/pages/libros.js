@@ -16,12 +16,8 @@ import { Ionicons } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 
 const Libros = ({ navigation }) => {
-<<<<<<< HEAD
   const API_URL = "http://192.168.0.8:3000/ObtenerLibros/getlibrosmongo";
 
-=======
-  const API_URL = "http://192.168.11.115:3000/ObtenerLibros/getlibrosmongo";
->>>>>>> fb9fbd326f7b57b6519f3fe3a9a457aed9ba59bd
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");

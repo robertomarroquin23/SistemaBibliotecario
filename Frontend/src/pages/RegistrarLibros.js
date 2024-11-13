@@ -23,7 +23,7 @@ const LibraryScreen = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await axios.get('http://192.168.11.115:3000/ObtenerLibros/getlibrosmongo');
+      const response = await axios.get('http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo');
       setBooks(response.data);
     } catch (error) {
       console.error('Error al cargar los libros:', error);
@@ -51,7 +51,7 @@ const LibraryScreen = () => {
 
   const handleDeleteBook = async (id) => {
     try {
-      const response = await axios.post(`http://192.168.11.115:3000/biblioteca/deletebooks/${id}`);
+      const response = await axios.post(`http://192.168.0.4:3000/biblioteca/deletebooks/${id}`);
       Alert.alert('Éxito', 'Libro eliminado');
       fetchBooks();
     } catch (error) {
@@ -63,7 +63,7 @@ const LibraryScreen = () => {
   const handleAddBook = async () => {
     if (!validateFields()) return;
     try {
-      await axios.post('http://192.168.11.115:3000/biblioteca/createbooks', {
+      await axios.post('http://192.168.0.4:3000/biblioteca/createbooks', {
         title,
         author,
         image,
@@ -103,7 +103,7 @@ const LibraryScreen = () => {
   const handleSaveEditBook = async () => {
     if (!validateFields()) return;
     try {
-      await axios.post(`http://192.168.11.115:3000/biblioteca/editBooks/${selectedBook._id}`, {
+      await axios.post(`http://192.168.0.4:3000/biblioteca/editBooks/${selectedBook._id}`, {
         title,
         author,
         image,

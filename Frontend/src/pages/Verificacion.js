@@ -17,7 +17,11 @@ const Verificacion = () => {
   const [email, setEmail] = useState("");
   const [enteredCode, setEnteredCode] = useState("");
   const navigation = useNavigation();
+<<<<<<< HEAD
   URL_GETUSER = "http://192.168.0.8:3000/biblioteca/getbyid";
+=======
+  URL_GETUSER = "http://192.168.0.4:3000/biblioteca/getbyid";
+>>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
   //URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
 
   const generateVerificationCode = async () => {
@@ -26,6 +30,7 @@ const Verificacion = () => {
     setIsEmailVerified(true);
 
     try {
+<<<<<<< HEAD
       //const mail = await axios.post("http://192.168.1.70:3000/biblioteca/sendEmail", {
       const mail = await axios.post(
         "http://192.168.0.8:3000/biblioteca/sendEmail",
@@ -50,9 +55,26 @@ const Verificacion = () => {
           }
         } catch (error) {
           console.error("Error en la petición:", error);
+=======
+      const response = await axios.post(
+        "http://192.168.0.4:3000/biblioteca/verifyEmail",
+        {
+          email,
+>>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
         }
-      }
+      );
+      
+      try {
+        //const mail = await axios.post("http://192.168.1.70:3000/biblioteca/sendEmail", {
+        const mail = await axios.post(
+          "http://192.168.0.4:3000/biblioteca/sendEmail",
+          {
+            email,
+            code,
+          }
+        );
 
+<<<<<<< HEAD
       Alert.alert(
         "Éxito",
         "El código de verificación ha sido enviado a tu correo."
@@ -63,6 +85,38 @@ const Verificacion = () => {
         "Error",
         "Hubo un problema al enviar el código de verificación."
       );
+=======
+        if (mail.data._id) {
+          const id = mail.data._id;
+          console.log(userId);
+          try {clearImmediate
+            const userResponse = await axios.get(`${URL_GETUSER}/${id}`);
+            if (userResponse.status === 200) {
+              const userData = userResponse.data;
+              await AsyncStorage.setItem("user", JSON.stringify(userData));
+              const user = JSON.parse(await AsyncStorage.getItem("user"));
+            } else {
+              console.log("Error al obtener usuario:", response.data);
+            }
+          } catch (error) {
+            console.error("Error en la petición:", error);
+          }
+        }
+
+        Alert.alert(
+          "Éxito",
+          "El código de verificación ha sido enviado a tu correo."
+        );
+      } catch (error) {
+        console.error("Error al enviar el correo:", error);
+        Alert.alert(
+          "Error",
+          "Hubo un problema al enviar el código de verificación."
+        );
+      }
+    } catch (error) {
+      Alert.alert("Error", "Ingrese un correo o el correo que ha ingresado no esta registrado.");
+>>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
     }
   };
 

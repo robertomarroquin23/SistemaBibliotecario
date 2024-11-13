@@ -43,6 +43,7 @@ const Perfil = () => {
     }
   };
   const [userInfo, setUserInfo] = useState({
+<<<<<<< HEAD
     edad: "",
     fechaNacimiento: "",
     ciudad: "",
@@ -56,10 +57,22 @@ const Perfil = () => {
     pais: "",
     identificacion: "",
     username: "",
+=======
+    birthday: "",
+    email: "",
+    phone: "",
+    username: "",
+    street: "",
+    city: "",
+    state: "",
+    personalEmail: "",
+    postalCode: ""
+>>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
   });
 
   useEffect(() => {
     if (jsonUSER) {
+<<<<<<< HEAD
       setUserInfo({
         edad: jsonUSER.edad || "",
         fechaNacimiento: jsonUSER.fechaNacimiento || "",
@@ -74,6 +87,20 @@ const Perfil = () => {
         pais: jsonUSER.pais || "",
         identificacion: jsonUSER.identificacion || "",
         username: jsonUSER.username,
+=======
+      console.log("jsonUSER:", jsonUSER); // Verifica los datos
+  
+      setUserInfo({
+        birthday: jsonUSER.birthday || "",
+        email: jsonUSER.email || "",
+        phone: jsonUSER.phone || "", // Aquí usas jsonUSER.phone si la propiedad existe
+        username: jsonUSER.username || "",
+        street: jsonUSER.address?.street || "", // Accede a la propiedad dentro de address
+        city: jsonUSER.address?.city || "", // Accede a la propiedad dentro de address
+        state: jsonUSER.address?.state || "", // Accede a la propiedad dentro de address
+        personalEmail: jsonUSER.personalEmail || "", 
+        postalCode: jsonUSER.address?.postalCode || "" 
+>>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
       });
     }
   }, [jsonUSER]);
@@ -199,6 +226,7 @@ const Perfil = () => {
             Información
           </Text>
         </TouchableOpacity>
+<<<<<<< HEAD
         <TouchableOpacity
           style={[
             styles.tab,
@@ -215,11 +243,14 @@ const Perfil = () => {
             Historial de Préstamos
           </Text>
         </TouchableOpacity>
+=======
+>>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
       </View>
 
       <View style={styles.tabContent}>
         {selectedTab === "Información" ? (
           <View style={styles.infoContainer}>
+<<<<<<< HEAD
             {renderInfoBox("Edad", userInfo.edad, "edad")}
             {renderInfoBox(
               "Fecha de Nacimiento",
@@ -244,6 +275,21 @@ const Perfil = () => {
               userInfo.identificacion,
               "identificacion"
             )}
+=======
+            {renderInfoBox(
+              "Fecha de Nacimiento",
+              userInfo.birthday,
+              "birthday"
+            )}
+            {renderInfoBox("Ciudad", userInfo.city, "city")}
+            {renderInfoBox("Calle", userInfo.street, "street")}
+            {renderInfoBox("Correo Electrónico", userInfo.email, "email")}
+            {renderInfoBox("Teléfono", userInfo.phone, "phone")}
+            {renderInfoBox("Codigo Postal", userInfo.postalCode, "postalCode")}
+            {renderInfoBox("Estado", userInfo.state, "state")}
+            {renderInfoBox("Correo Personal", userInfo.personalEmail, "presonalEmail")}
+            {renderInfoBox("Usuario", userInfo.username, "username")}
+>>>>>>> 0f7110bcce6e302ad934a29487b646f8d1eb59f4
           </View>
         ) : (
           <Text style={styles.contentText}>Historial de préstamos...</Text>
