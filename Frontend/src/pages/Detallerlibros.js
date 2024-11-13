@@ -48,12 +48,12 @@ const DetallesLibro = ({ route, navigation }) => {
     getUserData();
   }, []);
 
-  const API_URL = "http://192.168.0.4:3000/biblioteca/Reservarlibro";
+  const API_URL = "http://192.168.11.160:3000/biblioteca/Reservarlibro";
   //const API_URL = "http://192.168.1.70:3000/biblioteca/Reservarlibro";
 
 
   const handleReserve = async () => {
-    if (!jsonUSER || !jsonUSER.identificacion) {
+    if (!jsonUSER || !jsonUSER._id) {
       console.error("No se encontraron datos de usuario válidos para reservar");
       return;
     }
@@ -61,7 +61,7 @@ const DetallesLibro = ({ route, navigation }) => {
     try {
       const response = await axios.post(API_URL, {
         bookId: book.id,
-        identificacion: jsonUSER.identificacion,
+        identificacion: jsonUSER._id,
         nombre: jsonUSER.username,
       //  apellidos: jsonUSER.apellidos || "",
         
