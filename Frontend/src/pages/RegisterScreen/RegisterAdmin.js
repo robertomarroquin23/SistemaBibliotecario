@@ -25,7 +25,7 @@ const RegisterScreen = ({ navigation }) => {
     // Enviar datos al servidor
     const handleRegister = async () => {
         try {
-            const response = await axios.post('http://192.168.0.4:3000/biblioteca/register', {
+            const response = await axios.post('http://192.168.0.4:3000/biblioteca/registerAdmin', {
                 username: form.username,
                 email: form.email,
                 password: form.password,
@@ -40,7 +40,6 @@ const RegisterScreen = ({ navigation }) => {
                 birthday: form.birthday
             });
             Alert.alert('Registro exitoso', response.data.msg);
-            navigation.navigate('Login');
         } catch (error) {
             Alert.alert('Error en el registro', error.response?.data?.msg);
         }

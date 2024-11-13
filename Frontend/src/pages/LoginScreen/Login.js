@@ -20,6 +20,10 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate('Verificacion');
   };
 
+  const Register = () => {
+    navigation.navigate('Register');
+  };
+
   const handleLogin = async () => {
     try {
       //const response = await axios.post("http://192.168.1.70:3000/biblioteca/login", {
@@ -88,7 +92,7 @@ const LoginScreen = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Botón para navegar a la pantalla de registro */}
-      <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
+      <TouchableOpacity style={styles.registerButton} onPress={Register}>
         <Text style={styles.registerButtonText}>Registrarse</Text>
       </TouchableOpacity>
 

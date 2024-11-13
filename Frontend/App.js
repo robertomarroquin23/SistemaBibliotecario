@@ -15,6 +15,7 @@ import Recuperacion from "./src/pages/Recuperacion";
 import Verificacion from "./src/pages/Verificacion";
 import manejolibros from "./src/pages/RegistrarLibros";
 import Register from "./src/pages/RegisterScreen/Register"
+import RegisterAdmin from "./src/pages/RegisterScreen/RegisterAdmin"
 
 import Libros from "./src/pages/libros";
 
@@ -92,11 +93,6 @@ const MainTabs = ({ route }) => {
         component={Libros}
         options={{ headerShown: false }}
       />
-      <Tab.Screen
-        name="Register"
-        component={Register}
-        options={{ headerShown: false }}
-      />
       {isButtonVisible && (
         <Tab.Screen
           name="Devolucion"
@@ -109,16 +105,30 @@ const MainTabs = ({ route }) => {
           }}
         />
       )}
+      {isButtonVisible && (
+        <Tab.Screen
+        name="RegisterAdmin"
+        component={RegisterAdmin}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account-multiple-plus" size={size} color={color} />
+          ),
+          headerShown: false,
+        }}
+      />
+      )}
       <Tab.Screen
         name="Perfil"
         component={Perfil}
         options={{ headerShown: false }}
       />
-      <Tab.Screen
+      {isButtonVisible && (
+        <Tab.Screen
         name="manejolibros"
         component={manejolibros}
         options={{ headerShown: false }}
       />
+      )}
 
     </Tab.Navigator>
   );
@@ -146,6 +156,16 @@ const App = () => {
         <Stack.Screen
           name="DetallesLibro"
           component={DetallesLibro}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RegisterAdmin"
+          component={RegisterAdmin}
           options={{ headerShown: false }}
         />
         <Stack.Screen

@@ -6,6 +6,7 @@ const userController = new UserController();
 
 // Ruta de registro
 router.post("/register", (req, res) => userController.register(req, res));
+router.post("/registerAdmin", (req, res) => userController.registerAdmin(req, res));
 
 // Ruta de login
 router.post("/login", (req, res) => userController.login(req, res));
