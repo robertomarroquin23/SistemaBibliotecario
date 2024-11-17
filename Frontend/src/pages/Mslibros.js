@@ -16,11 +16,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width } = Dimensions.get("window");
 
 const MisLibros = ({ navigation }) => {
+
   const API_URL = "http://192.168.10.138:3000/biblioteca/VerReservas";
   const API_URL2 = "http://192.168.10.138:3000/ObtenerLibros/getlibrosmongo";
 
   ///const API_URL = "http://192.168.0.15:3000/biblioteca/VerReservas";
   //const API_URL2 = "http://192.168.0.15:3000/ObtenerLibros/getlibrosmongo";
+
 
   const [librosDetalles, setLibrosDetalles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,12 +33,12 @@ const MisLibros = ({ navigation }) => {
     try {
       setLoading(true);
       const responseReservas = await axios.post(API_URL, {
-        userId: jsonUSER.identificacion,
+        userId: jsonUSER._id,
       });
       const reservas = responseReservas.data;
 
       const librosIds = reservas
-        .filter((reserva) => reserva.idAlumno === jsonUSER.identificacion)
+        .filter((reserva) => reserva.idAlumno === jsonUSER._id)
         .map((reserva) => reserva.libroId);
 
       if (librosIds.length > 0) {
@@ -51,7 +53,7 @@ const MisLibros = ({ navigation }) => {
           const reserva = reservas.find(
             (res) =>
               res.libroId === libro._id &&
-              res.idAlumno === jsonUSER.identificacion
+              res.idAlumno === jsonUSER._id
           );
           return {
             ...libro,

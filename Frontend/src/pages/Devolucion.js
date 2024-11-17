@@ -16,9 +16,11 @@ const { width } = Dimensions.get("window");
 const Devolucion = () => {
   const [reservaDetalles, setReservasDetalles] = useState([]);
   const [infoLibros, setInfoLibros] = useState([]);
+
   const API_URL = "http://192.168.10.138:3000/biblioteca/VerTodasReservas";
   const API_URL2 = "http://192.168.10.138:3000/biblioteca/devolverStock";
   const API_URL3 = "http://192.168.10.138:3000/ObtenerLibros/getlibrosmongo";
+
   //const API_URL = "http://192.168.1.70:3000/biblioteca/VerTodasReservas";
   //const API_URL2 = "http://192.168.1.70:3000/biblioteca/devolverStock";
   //const API_URL3 = "http://192.168.1.70:3000/ObtenerLibros/getlibrosmongo";

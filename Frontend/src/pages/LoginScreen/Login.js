@@ -14,8 +14,10 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+
   URL_GETUSER = "http://192.168.10.138:3000/biblioteca/getbyid";
   //URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
+
 
   const Recuperacion = () => {
     navigation.navigate("Verificacion");
@@ -36,6 +38,7 @@ const LoginScreen = ({ navigation }) => {
           password: password,
         }
       );
+
 
       if (response.data.id) {
         const id = response.data.id;
