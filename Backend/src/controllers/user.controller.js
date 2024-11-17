@@ -8,7 +8,15 @@ dotenv.config();
 export class UserController {
   // Registro de usuario
   async register(req, res) {
-    const { username, email, password, address, phone, personalEmail, birthday } = req.body;
+    const {
+      username,
+      email,
+      password,
+      address,
+      phone,
+      personalEmail,
+      birthday,
+    } = req.body;
 
     try {
       // Verificar si el usuario ya existe
@@ -26,7 +34,7 @@ export class UserController {
         phone,
         personalEmail,
         birthday,
-        roll: 1
+        roll: 1,
       });
 
       // Hashear la contraseña antes de guardar
@@ -42,7 +50,15 @@ export class UserController {
   }
 
   async registerAdmin(req, res) {
-    const { username, email, password, address, phone, personalEmail, birthday } = req.body;
+    const {
+      username,
+      email,
+      password,
+      address,
+      phone,
+      personalEmail,
+      birthday,
+    } = req.body;
 
     try {
       // Verificar si el usuario ya existe
@@ -60,7 +76,7 @@ export class UserController {
         phone,
         personalEmail,
         birthday,
-        roll: 2
+        roll: 2,
       });
 
       // Hashear la contraseña antes de guardar
@@ -138,9 +154,8 @@ export class UserController {
   }
 
   async useredit(req, res) {
-    const {
-      username, email, address, phone, personalEmail, birthday
-    } = req.body;
+    const { username, email, address, phone, personalEmail, birthday } =
+      req.body;
     const id = req.params.id;
     try {
       const user = await User.findById(id);

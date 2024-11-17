@@ -11,13 +11,18 @@ import {
 } from "react-native";
 import axios from "axios";
 import { Circle } from "react-native-progress";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
 const MisLibros = ({ navigation }) => {
-  const API_URL = "http://192.168.11.160:3000/biblioteca/VerReservas";
-  const API_URL2 = "http://192.168.11.160:3000/ObtenerLibros/getlibrosmongo";
+
+  const API_URL = "http://192.168.10.138:3000/biblioteca/VerReservas";
+  const API_URL2 = "http://192.168.10.138:3000/ObtenerLibros/getlibrosmongo";
+
+  ///const API_URL = "http://192.168.0.15:3000/biblioteca/VerReservas";
+  //const API_URL2 = "http://192.168.0.15:3000/ObtenerLibros/getlibrosmongo";
+
 
   const [librosDetalles, setLibrosDetalles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,12 +63,12 @@ const MisLibros = ({ navigation }) => {
 
         setLibrosDetalles(librosConReservas);
       } else {
-        setLibrosDetalles([]);  
+        setLibrosDetalles([]);
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.log("El recurso no fue encontrado.");
-        setLibrosDetalles([]);  // vacio
+        setLibrosDetalles([]); // vacio
       } else {
         console.error("Error al cargar las reservas:", error);
       }
@@ -72,22 +77,20 @@ const MisLibros = ({ navigation }) => {
     }
   };
 
-
-
   const getUserData = async () => {
     try {
       const userData = await AsyncStorage.getItem("user");
       if (userData) {
         const jsonUSER = JSON.parse(userData);
         setJsonUser(jsonUSER);
-        await fetchData(jsonUSER); 
+        await fetchData(jsonUSER);
       } else {
         console.log("No se encontró el usuario en AsyncStorage");
-        setLibrosDetalles([]);  
+        setLibrosDetalles([]);
       }
     } catch (error) {
       console.error("Error al obtener los datos del usuario:", error);
-      setLibrosDetalles([]); 
+      setLibrosDetalles([]);
     }
   };
   const onRefresh = useCallback(() => {
@@ -203,10 +206,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   messageText: {
-    color: "#fff",          
+    color: "#fff",
     fontSize: 27,
     textAlign: "center",
-  }, tarjetasContainer: {
+  },
+  tarjetasContainer: {
     top: 20,
     alignItems: "center",
     marginBottom: 90,

@@ -52,15 +52,14 @@ app.use("/biblioteca", librosRoutes);
 app.use("/biblioteca/", userRoutes);
 app.use("/ObtenerLibros", librosRoutes);
 app.use("/biblioteca/getlibros", librosRoutes);
-app.use("/biblioteca/VerReservas", librosRoutes);  
+app.use("/biblioteca/VerReservas", librosRoutes);
 app.use("/biblioteca/VerTodasReservas", librosRoutes);
 app.use("/biblioteca/devolverStock", librosRoutes);
 
 // Ejemplo de ruta
 app.post("/api/login", (req, res) => {
   // Tu lógica de login
-  res.json({ message: 'Inicio de sesión exitoso', token: 'token_jwt', });
-  
+  res.json({ message: "Inicio de sesión exitoso", token: "token_jwt" });
 });
 
 app.listen(port, () => console.log(`app listening on port ${port}`));

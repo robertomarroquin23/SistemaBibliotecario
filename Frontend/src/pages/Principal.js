@@ -13,8 +13,7 @@ import {
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -39,8 +38,9 @@ const colors = [
 ];
 //aqui poner simpre la ip de la maquina no local ni 127.0.0.1 si les da un network error corrar ipconfig en la terminal y cambien la ip
 //const API_URL = "http://192.168.1.63:3000/ObtenerLibros/getlibrosmongo"; 192.168.0.15:3000
-const API_URL = "http://192.168.11.160:3000/ObtenerLibros/getlibrosmongo";
-//const API_URL = "http://192.168.0.4:3000/ObtenerLibros/getlibrosmongo";
+
+const API_URL = "http://192.168.10.138:3000/ObtenerLibros/getlibrosmongo";
+
 {
   /*const recommendedBooks = [
   {
@@ -77,7 +77,7 @@ const API_URL = "http://192.168.11.160:3000/ObtenerLibros/getlibrosmongo";
 }
 
 const Principal = ({ navigation }) => {
-  const [jsonUSER, setJsonUser] = useState(null); 
+  const [jsonUSER, setJsonUser] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [librosDetalles, setLibrosDetalles] = useState([]);
@@ -136,7 +136,7 @@ const Principal = ({ navigation }) => {
 
       if (userData) {
         const jsonUSER = JSON.parse(userData);
-        setJsonUser(jsonUSER); 
+        setJsonUser(jsonUSER);
         console.log("Datos del usuario:", jsonUSER);
       } else {
         console.log("No se encontró el usuario en AsyncStorage");
@@ -216,8 +216,6 @@ const Principal = ({ navigation }) => {
     },
   ];*/
   }
- 
-
 
   const backgroundColorInterpolate = colorAnimation.interpolate({
     inputRange: [0, 1],
@@ -248,8 +246,6 @@ const Principal = ({ navigation }) => {
             </View>
           </View>
         </View>
-       
-            
 
         <Text style={styles.headerName}>Hola, {jsonUSER.username}</Text>
         <Text style={styles.headerText}>Bienvenido {"\n"}otra vez!!!</Text>
@@ -327,7 +323,6 @@ const Principal = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  
   header: {
     width: "100%",
     height: 300,

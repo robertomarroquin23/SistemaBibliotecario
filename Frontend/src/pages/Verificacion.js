@@ -17,7 +17,7 @@ const Verificacion = () => {
   const [email, setEmail] = useState("");
   const [enteredCode, setEnteredCode] = useState("");
   const navigation = useNavigation();
-  URL_GETUSER = "http://192.168.0.4:3000/biblioteca/getbyid";
+  URL_GETUSER = "http://192.168.10.138:3000/biblioteca/getbyid";
   //URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
 
   const generateVerificationCode = async () => {
@@ -27,16 +27,16 @@ const Verificacion = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.4:3000/biblioteca/verifyEmail",
+        "http://192.168.10.138:3000/biblioteca/verifyEmail",
         {
           email,
         }
       );
-      
+
       try {
         //const mail = await axios.post("http://192.168.1.70:3000/biblioteca/sendEmail", {
         const mail = await axios.post(
-          "http://192.168.0.4:3000/biblioteca/sendEmail",
+          "http://192.168.10.138:3000/biblioteca/sendEmail",
           {
             email,
             code,
@@ -46,7 +46,8 @@ const Verificacion = () => {
         if (mail.data._id) {
           const id = mail.data._id;
           console.log(userId);
-          try {clearImmediate
+          try {
+            clearImmediate;
             const userResponse = await axios.get(`${URL_GETUSER}/${id}`);
             if (userResponse.status === 200) {
               const userData = userResponse.data;
@@ -72,7 +73,10 @@ const Verificacion = () => {
         );
       }
     } catch (error) {
-      Alert.alert("Error", "Ingrese un correo o el correo que ha ingresado no esta registrado.");
+      Alert.alert(
+        "Error",
+        "Ingrese un correo o el correo que ha ingresado no esta registrado."
+      );
     }
   };
 

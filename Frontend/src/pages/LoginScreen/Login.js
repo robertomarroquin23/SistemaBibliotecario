@@ -13,24 +13,32 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  URL_GETUSER= "http://192.168.11.160:3000/biblioteca/getbyid";
-//URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
+
+
+  URL_GETUSER = "http://192.168.10.138:3000/biblioteca/getbyid";
+  //URL_GETUSER= "http://192.168.1.70:3000/biblioteca/getbyid";
+
 
   const Recuperacion = () => {
-    navigation.navigate('Verificacion');
+    navigation.navigate("Verificacion");
   };
 
   const Register = () => {
-    navigation.navigate('Register');
+    navigation.navigate("Register");
   };
 
   const handleLogin = async () => {
     try {
       //const response = await axios.post("http://192.168.1.70:3000/biblioteca/login", {
-      const response = await axios.post("http://192.168.11.160:3000/biblioteca/login", {
-        email: email,
-        password: password,
-      });
+
+      const response = await axios.post(
+        "http://192.168.10.138:3000/biblioteca/login",
+        {
+          email: email,
+          password: password,
+        }
+      );
+
 
       if (response.data.id) {
         const id = response.data.id;
@@ -56,6 +64,10 @@ const LoginScreen = ({ navigation }) => {
       }
 
       await AsyncStorage.setItem("token", response.data.token);
+
+      // Navegar a la siguiente pantalla si el login es exitoso
+      //navigation.navigate("Principal");
+      navigation.navigate("MainTabs");
     } catch (error) {
       if (error.response && error.response.status === 400) {
         Alert.alert("Error", "Credenciales incorrectas");
@@ -96,7 +108,9 @@ const LoginScreen = ({ navigation }) => {
         <Text style={styles.registerButtonText}>Registrarse</Text>
       </TouchableOpacity>
 
-      <Text style={styles.forgotPassword} onPress={Recuperacion}>¿Olvidaste tu contraseña?</Text>
+      <Text style={styles.forgotPassword} onPress={Recuperacion}>
+        ¿Olvidaste tu contraseña?
+      </Text>
     </View>
   );
 };
@@ -149,9 +163,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   registerButtonText: {
-    color: '#007BFF',
+    color: "#007BFF",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

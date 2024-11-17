@@ -1,8 +1,14 @@
-import React, { useState, useEffect  } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 const Recuperacion = ({ navigation }) => {
   const [password, setPassword] = useState("");
@@ -45,13 +51,13 @@ const Recuperacion = ({ navigation }) => {
 
     try {
       const response = await axios.put(
-        `http://192.168.0.4:3000/biblioteca/updatePass/${userId}`,
+        `http://192.168.10.138:3000/biblioteca/updatePass/${userId}`,
         //`http://192.168.1.70:3000/biblioteca/updatePass/${userId}`,
         { password }
       );
       if (response.status === 200) {
         Alert.alert("Éxito", "Contraseña actualizada con éxito");
-        changeScreen(); 
+        changeScreen();
       }
     } catch (error) {
       console.error("Error al actualizar la contraseña:", error);

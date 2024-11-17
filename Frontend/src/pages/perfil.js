@@ -51,13 +51,13 @@ const Perfil = () => {
     city: "",
     state: "",
     personalEmail: "",
-    postalCode: ""
+    postalCode: "",
   });
 
   useEffect(() => {
     if (jsonUSER) {
       console.log("jsonUSER:", jsonUSER); // Verifica los datos
-  
+
       setUserInfo({
         birthday: jsonUSER.birthday || "",
         email: jsonUSER.email || "",
@@ -66,8 +66,8 @@ const Perfil = () => {
         street: jsonUSER.address?.street || "", // Accede a la propiedad dentro de address
         city: jsonUSER.address?.city || "", // Accede a la propiedad dentro de address
         state: jsonUSER.address?.state || "", // Accede a la propiedad dentro de address
-        personalEmail: jsonUSER.personalEmail || "", 
-        postalCode: jsonUSER.address?.postalCode || "" 
+        personalEmail: jsonUSER.personalEmail || "",
+        postalCode: jsonUSER.address?.postalCode || "",
       });
     }
   }, [jsonUSER]);
@@ -209,7 +209,11 @@ const Perfil = () => {
             {renderInfoBox("Teléfono", userInfo.phone, "phone")}
             {renderInfoBox("Codigo Postal", userInfo.postalCode, "postalCode")}
             {renderInfoBox("Estado", userInfo.state, "state")}
-            {renderInfoBox("Correo Personal", userInfo.personalEmail, "presonalEmail")}
+            {renderInfoBox(
+              "Correo Personal",
+              userInfo.personalEmail,
+              "presonalEmail"
+            )}
             {renderInfoBox("Usuario", userInfo.username, "username")}
           </View>
         ) : (
